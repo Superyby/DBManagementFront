@@ -49,8 +49,8 @@ function App() {
         )}
 
         <div style={{ marginTop: '30px', fontSize: '14px', opacity: 0.8 }}>
-          <p>API 地址: http://192.168.31.36:8080</p>
-          <p>代理测试: http://192.168.31.36:3000/api/health</p>
+          <p>API 地址: http://localhost:8080</p>
+          <p>代理测试: http://localhost:3000/api/health</p>
         </div>
         <h1>Hedy Lamarr's Todos</h1>
         <img
