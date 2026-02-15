@@ -327,7 +327,7 @@ export function DashboardBold() {
             </FloatingCard3D>
           </div>
 
-          {/* 详情面板 */}
+          {/* 详情面板 - 桌面端 */}
           {!isMobile && (
             <div className="col-span-8">
               <FloatingCard3D borderStyle="neon" className="h-full min-h-[500px]">
@@ -458,7 +458,92 @@ export function DashboardBold() {
               </FloatingCard3D>
             </div>
           )}
+
+          {/* 详情面板 - 移动端 */}
+          {isMobile && selectedConnection && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="mt-4"
+            >
+              <FloatingCard3D borderStyle="neon">
+                <div className="p-4">
+                  {/* 头部 */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-black text-white uppercase tracking-tight">
+                        {selectedConnection.name}
+                      </h2>
+                      <p className="text-xs font-mono text-cyber-cyan mt-0.5">
+                        {selectedConnection.db_type.toUpperCase()}
+                      </p>
+                    </div>
+                    <StatusIndicator 
+                      status={testStatus === 'success' ? 'online' : testStatus === 'error' ? 'offline' : testStatus === 'testing' ? 'loading' : 'offline'} 
+                    />
+                  </div>
+
+                  {/* 快速信息 */}
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="p-3 bg-black/40 border border-white/10">
+                      <div className="text-[10px] text-white/40 font-mono mb-0.5">HOST</div>
+                      <div className="font-mono text-sm text-white truncate">{selectedConnection.host || '—'}</div>
+                    </div>
+                    <div className="p-3 bg-black/40 border border-white/10">
+                      <div className="text-[10px] text-white/40 font-mono mb-0.5">PORT</div>
+                      <div className="font-mono text-sm text-white">{selectedConnection.port || '—'}</div>
+                    </div>
+                  </div>
+
+                  {/* 操作按钮 */}
+                  <div className="flex gap-2">
+                    <BrutalButton 
+                      variant="primary" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => navigate(`/monitor/${selectedConnection.id}`)}
+                    >
+                      <BarChart3 className="w-3.5 h-3.5 mr-1" />
+                      MONITOR
+                    </BrutalButton>
+                    <BrutalButton 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={handleTestConnection}
+                    >
+                      <Play className="w-3.5 h-3.5 mr-1" />
+                      TEST
+                    </BrutalButton>
+                    <BrutalButton 
+                      variant="danger" 
+                      size="sm"
+                      onClick={handleDeleteConnection}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </BrutalButton>
+                  </div>
+                </div>
+              </FloatingCard3D>
+            </motion.div>
+          )}
         </div>
+
+        {/* 移动端浮动 ADD 按钮 */}
+        {isMobile && (
+          <motion.button
+            onClick={() => navigate('/add')}
+            className="fixed right-6 bottom-24 z-40 w-14 h-14 bg-cyber-cyan text-black flex items-center justify-center shadow-[0_0_20px_rgba(0,255,242,0.5)]"
+            style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ delay: 0.5, type: 'spring' }}
+          >
+            <Plus className="w-6 h-6" />
+          </motion.button>
+        )}
       </div>
     </div>
   );

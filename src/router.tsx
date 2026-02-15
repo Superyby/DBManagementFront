@@ -31,6 +31,10 @@ export const router = createBrowserRouter([
         element: <AddConnection />,
       },
       {
+        path: 'monitor',
+        element: <Monitor />,
+      },
+      {
         path: 'monitor/:id',
         element: <Monitor />,
       },

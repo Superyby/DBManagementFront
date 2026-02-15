@@ -10,7 +10,8 @@ import {
 import { FloatingCard3D, DataPanel, StatusIndicator, BrutalButton } from '../components/ui/BrutalComponents';
 import { LiquidBlob, NoiseOverlay, ScanLines, HexGrid } from '../components/effects/LiquidBackground';
 import { useNotification } from '../components/effects/Notification';
-import { getConnectionStats, getConnectionDatabases, getConnectionProcesses } from '../api/modules/connections';
+import { getConnections, getConnectionStats, getConnectionDatabases, getConnectionProcesses } from '../api/modules/connections';
+import type { ConnectionItem } from '../types/connection';
 import type { MonitorOverview, DatabaseInfo, ProcessInfo } from '../types/connection';
 import { cn } from '../lib/utils';
 
@@ -186,35 +187,144 @@ function RingGauge({
 
   return (
     <div className="flex flex-col items-center">
-      <svg width={size} height={size} className="-rotate-90">
-        {/* Background ring */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth="6"
-        />
-        {/* Value ring */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth="6"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.8s ease-out', filter: `drop-shadow(0 0 6px ${color})` }}
-        />
-      </svg>
-      <div className="absolute flex flex-col items-center justify-center" style={{ width: size, height: size }}>
-        <span className="text-xl font-bold font-mono" style={{ color }}>{value}</span>
-        <span className="text-[9px] text-white/40 font-mono">/{max}</span>
+      <div className="relative">
+        <svg width={size} height={size} className="-rotate-90">
+          {/* Background ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth="6"
+          />
+          {/* Value ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke={color}
+            strokeWidth="6"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: 'stroke-dashoffset 0.8s ease-out', filter: `drop-shadow(0 0 6px ${color})` }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-xl font-bold font-mono" style={{ color }}>{value}</span>
+          <span className="text-[9px] text-white/40 font-mono">/{max}</span>
+        </div>
       </div>
       <span className="text-[10px] font-mono text-white/50 uppercase tracking-wider mt-1">{label}</span>
+    </div>
+  );
+}
+
+// ========== 连接选择器（无ID时显示） ==========
+function ConnectionPicker() {
+  const navigate = useNavigate();
+  const [connections, setConnections] = useState<ConnectionItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    getConnections()
+      .then((r) => setConnections(r.data || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    gsap.fromTo(el,
+      { y: -40, opacity: 0, skewY: 2 },
+      { y: 0, opacity: 1, skewY: 0, duration: 0.6, ease: 'power3.out' }
+    );
+  }, []);
+
+  const dbTypeIcon: Record<string, string> = {
+    mysql: '🐬', postgres: '🐘', sqlite: '📦', redis: '🔴',
+    mongodb: '🍃', clickhouse: '⚡', elasticsearch: '🔍',
+  };
+
+  return (
+    <div className="relative min-h-screen">
+      <LiquidBlob colors={['#00fff2', '#bf00ff', '#00ff88']} blur={120} speed={20} />
+      <HexGrid opacity={0.04} />
+      <NoiseOverlay opacity={0.02} />
+      <ScanLines opacity={0.04} />
+
+      <div className="relative z-10 p-6 lg:p-8 max-w-4xl mx-auto">
+        <motion.button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-white/40 hover:text-cyber-cyan mb-6 font-mono text-sm uppercase tracking-wider transition-colors"
+          whileHover={{ x: -4 }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          BACK TO DASHBOARD
+        </motion.button>
+
+        <h1 ref={titleRef} className="text-3xl lg:text-5xl font-black text-white uppercase tracking-tight mb-2">
+          SELECT
+          <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-green via-cyber-cyan to-cyber-purple">
+            CONNECTION
+          </span>
+        </h1>
+        <p className="font-mono text-white/40 text-sm mb-10 uppercase tracking-wider">Choose a connection to monitor</p>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <RefreshCw className="w-6 h-6 text-cyber-cyan animate-spin" />
+          </div>
+        ) : connections.length === 0 ? (
+          <div className="text-center py-20">
+            <Database className="w-12 h-12 text-white/20 mx-auto mb-4" />
+            <p className="font-mono text-white/40 text-sm mb-4">NO CONNECTIONS FOUND</p>
+            <BrutalButton variant="primary" onClick={() => navigate('/add')}>ADD CONNECTION</BrutalButton>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {connections.map((conn, i) => (
+              <motion.div
+                key={conn.id}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <button
+                  onClick={() => navigate(`/monitor/${conn.id}`)}
+                  className="w-full text-left group p-5 border border-white/10 hover:border-cyber-cyan/50 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:bg-cyber-cyan/5"
+                  style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl">{dbTypeIcon[conn.db_type.toLowerCase()] || '💾'}</span>
+                      <div>
+                        <div className="font-mono font-bold text-white group-hover:text-cyber-cyan transition-colors">
+                          {conn.name}
+                        </div>
+                        <div className="font-mono text-xs text-white/40 mt-1">
+                          {conn.db_type.toUpperCase()}
+                          {conn.host && <span className="ml-2">{conn.host}:{conn.port}</span>}
+                          {conn.database && <span className="ml-2">/ {conn.database}</span>}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/30 group-hover:text-cyber-cyan transition-colors">
+                      <BarChart3 className="w-5 h-5" />
+                      <span className="font-mono text-xs uppercase">Monitor</span>
+                    </div>
+                  </div>
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -240,13 +350,14 @@ export function Monitor() {
 
   // 标题动画
   useEffect(() => {
+    if (!id) return;
     const el = titleRef.current;
     if (!el) return;
     gsap.fromTo(el,
       { y: -40, opacity: 0, skewY: 2 },
       { y: 0, opacity: 1, skewY: 0, duration: 0.6, ease: 'power3.out' }
     );
-  }, []);
+  }, [id]);
 
   // 拉取数据
   const fetchData = useCallback(async () => {
@@ -291,6 +402,9 @@ export function Monitor() {
 
   const stats = overview?.stats;
   const pool = overview?.pool;
+
+  // 无 ID 时显示连接选择器（所有 hooks 已在上方调用）
+  if (!id) return <ConnectionPicker />;
 
   return (
     <div className="relative min-h-screen">

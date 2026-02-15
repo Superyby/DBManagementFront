@@ -144,9 +144,15 @@ export function BrutalButton({
   };
 
   const sizes = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    sm: 'px-3 py-1.5 text-[11px]',
+    md: 'px-6 py-3 text-sm',
+    lg: 'px-8 py-4 text-base',
+  };
+
+  const clipSizes = {
+    sm: 5,
+    md: 8,
+    lg: 10,
   };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -184,17 +190,17 @@ export function BrutalButton({
         sizes[size],
         className
       )}
-      whileHover={{ x: 4, y: -4 }}
+      whileHover={{ x: 3, y: -3 }}
       style={{
-        clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))',
+        clipPath: `polygon(0 0, calc(100% - ${clipSizes[size]}px) 0, 100% ${clipSizes[size]}px, 100% 100%, ${clipSizes[size]}px 100%, 0 calc(100% - ${clipSizes[size]}px))`,
       }}
     >
       {/* 阴影层 */}
       <div 
         className="absolute inset-0 bg-black -z-10"
         style={{
-          transform: 'translate(4px, 4px)',
-          clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))',
+          transform: `translate(${clipSizes[size] > 5 ? 4 : 3}px, ${clipSizes[size] > 5 ? 4 : 3}px)`,
+          clipPath: `polygon(0 0, calc(100% - ${clipSizes[size]}px) 0, 100% ${clipSizes[size]}px, 100% 100%, ${clipSizes[size]}px 100%, 0 calc(100% - ${clipSizes[size]}px))`,
         }}
       />
       <span className="relative z-10 flex items-center">{children}</span>
