@@ -6,6 +6,9 @@ import type {
   ConnectionTestResult,
   AggregatedHealth,
   HealthResponse,
+  MonitorOverview,
+  DatabaseInfo,
+  ProcessInfo,
 } from '../../types/connection';
 
 // 获取所有连接列表
@@ -41,4 +44,21 @@ export async function getAggregatedHealth() {
 // 获取健康检查
 export async function getHealth() {
   return get<HealthResponse>(API_ENDPOINTS.health);
+}
+
+// ===================== 监控接口 =====================
+
+// 获取连接监控概览
+export async function getConnectionStats(id: string) {
+  return get<MonitorOverview>(API_ENDPOINTS.connectionStats(id));
+}
+
+// 获取连接上的数据库列表
+export async function getConnectionDatabases(id: string) {
+  return get<DatabaseInfo[]>(API_ENDPOINTS.connectionDatabases(id));
+}
+
+// 获取连接上的活跃进程
+export async function getConnectionProcesses(id: string) {
+  return get<ProcessInfo[]>(API_ENDPOINTS.connectionProcesses(id));
 }

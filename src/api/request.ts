@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { toast } from 'react-toastify';
 import { API_CONFIG } from './config';
 import type { ApiResponse } from '../types/connection';
 
@@ -33,10 +32,10 @@ request.interceptors.response.use(
   (response: AxiosResponse<ApiResponse<unknown>>) => {
     const { data } = response;
     
-    // 检查业务状态码
-    if (data.code !== 0 && data.code !== 200) {
-      toast.error(data.message || '请求失败');
-      return Promise.reject(new Error(data.message));
+    // 检查业务状态码（允许 0, 200, 或无 code 字段）
+    if (data.code !== undefined && data.code !== 0 && data.code !== 200) {
+      console.warn('API business error:', data.message);
+      return Promise.reject(new Error(data.message || '请求失败'));
     }
     
     return response;
@@ -48,30 +47,22 @@ request.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response;
       
-      switch (status) {
-        case 400:
-          message = data?.message || '请求参数错误';
-          break;
-        case 401:
-          message = '未授权，请重新登录';
-          break;
-        case 403:
-          message = '拒绝访问';
-          break;
-        case 404:
-          message = data?.message || '资源不存在';
-          break;
-        case 500:
-          message = '服务器内部错误';
-          break;
-        case 502:
-          message = '网关错误';
-          break;
-        case 503:
-          message = '服务不可用';
-          break;
-        default:
-          message = data?.message || `请求失败 (${status})`;
+      // 优先使用后端返回的详细信息
+      if (data?.message) {
+        message = data.message;
+      } else if (data?.error?.message) {
+        message = data.error.message;
+      } else {
+        switch (status) {
+          case 400: message = '请求参数错误'; break;
+          case 401: message = '未授权，请重新登录'; break;
+          case 403: message = '拒绝访问'; break;
+          case 404: message = '资源不存在'; break;
+          case 500: message = '服务器内部错误'; break;
+          case 502: message = '服务不可用'; break;
+          case 503: message = '服务不可用'; break;
+          default: message = `请求失败 (${status})`;
+        }
       }
     } else if (error.code === 'ECONNABORTED') {
       message = '请求超时';
@@ -79,8 +70,9 @@ request.interceptors.response.use(
       message = '网络连接已断开';
     }
     
-    toast.error(message);
-    console.error('Response error:', error);
+    console.error('Response error:', message, error);
+    // Attach parsed message to error for component-level handling
+    error.parsedMessage = message;
     return Promise.reject(error);
   }
 );

@@ -1,41 +1,93 @@
 import { useState, useEffect } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
-  faPlus, 
-  faServer, 
-  faCheckCircle, 
-  faTimesCircle,
-  faSpinner,
-  faPlay,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+  Database, 
+  Server, 
+  Activity, 
+  CheckCircle2, 
+  XCircle,
+  Play,
+  Trash2,
+  RefreshCw,
+  Loader2,
+} from 'lucide-react';
 import { ConnectionList } from '../components/connections/ConnectionList';
 import { ConnectionDialog } from '../components/connections/ConnectionDialog';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { GlitchText, TypeWriter } from '../components/effects/GlitchText';
+import { NeonBorder } from '../components/effects/NeonBorder';
 import { useResponsive } from '../hooks/useResponsive';
+import { useNotification } from '../components/effects/Notification';
 import { 
   getConnection, 
   testConnection, 
   deleteConnection,
   getAggregatedHealth 
 } from '../api/modules/connections';
-import type { ConnectionItem, AggregatedHealth, ConnectionTestResult } from '../types/connection';
-import { toast } from 'react-toastify';
+import type { ConnectionItem, AggregatedHealth } from '../types/connection';
+import { cn } from '../lib/utils';
+
+// 统计卡片组件
+interface StatCardProps {
+  title: string;
+  value: number | string;
+  icon: React.ReactNode;
+  color: 'cyan' | 'purple' | 'pink' | 'green';
+  delay?: number;
+}
+
+function StatCard({ title, value, icon, color, delay = 0 }: StatCardProps) {
+  const colorMap = {
+    cyan: { bg: 'bg-cyber-cyan/10', border: 'border-cyber-cyan/30', text: 'text-cyber-cyan' },
+    purple: { bg: 'bg-cyber-purple/10', border: 'border-cyber-purple/30', text: 'text-cyber-purple' },
+    pink: { bg: 'bg-cyber-pink/10', border: 'border-cyber-pink/30', text: 'text-cyber-pink' },
+    green: { bg: 'bg-cyber-green/10', border: 'border-cyber-green/30', text: 'text-cyber-green' },
+  };
+
+  const colors = colorMap[color];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+    >
+      <NeonBorder color={color} intensity="low">
+        <div className={cn('p-4 rounded-lg', colors.bg)}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-cyber-muted">{title}</p>
+              <p className={cn('text-2xl font-bold mt-1', colors.text)}>{value}</p>
+            </div>
+            <div className={cn('p-3 rounded-lg', colors.bg, colors.border, 'border')}>
+              {icon}
+            </div>
+          </div>
+        </div>
+      </NeonBorder>
+    </motion.div>
+  );
+}
 
 export function Dashboard() {
   const { id } = useParams<{ id?: string }>();
   const { isMobile } = useResponsive();
+  const { success, error } = useNotification();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedConnection, setSelectedConnection] = useState<ConnectionItem | null>(null);
-  const [healthData, setHealthData] = useState<AggregatedHealth | null>(null);
-  const [testResult, setTestResult] = useState<ConnectionTestResult | null>(null);
-  const [testing, setTesting] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [health, setHealth] = useState<AggregatedHealth | null>(null);
+  const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // 加载选中的连接详情
   useEffect(() => {
     if (id) {
-      loadConnectionDetail(id);
+      getConnection(id)
+        .then((response) => setSelectedConnection(response.data))
+        .catch(() => setSelectedConnection(null));
     } else {
       setSelectedConnection(null);
     }
@@ -43,240 +95,269 @@ export function Dashboard() {
 
   // 加载健康状态
   useEffect(() => {
-    loadHealth();
-    const interval = setInterval(loadHealth, 30000); // 每30秒刷新
-    return () => clearInterval(interval);
+    getAggregatedHealth()
+      .then((response) => setHealth(response.data))
+      .catch(() => setHealth(null));
   }, []);
 
-  const loadConnectionDetail = async (connId: string) => {
-    try {
-      const response = await getConnection(connId);
-      setSelectedConnection(response.data);
-    } catch (error) {
-      console.error('Failed to load connection:', error);
-    }
-  };
-
-  const loadHealth = async () => {
-    try {
-      const response = await getAggregatedHealth();
-      setHealthData(response.data);
-    } catch (error) {
-      console.error('Failed to load health:', error);
-    }
-  };
-
   // 测试连接
-  const handleTest = async () => {
+  const handleTestConnection = async () => {
     if (!selectedConnection) return;
-    
-    setTesting(true);
-    setTestResult(null);
+    setTestStatus('testing');
     try {
       const response = await testConnection(selectedConnection.id);
-      setTestResult(response.data);
-      if (response.data.success) {
-        toast.success(`连接测试成功 (${response.data.latency_ms}ms)`);
+      const result = response.data;
+      setTestStatus(result?.success ? 'success' : 'error');
+      if (result?.success) {
+        success('连接成功', `延迟: ${result.latency_ms}ms`);
       } else {
-        toast.error(`连接测试失败: ${response.data.error}`);
+        error('连接失败', result?.error || '无法连接到数据库');
       }
-    } catch (error) {
-      console.error('Failed to test connection:', error);
-    } finally {
-      setTesting(false);
+    } catch {
+      setTestStatus('error');
+      error('测试失败', '无法完成连接测试');
     }
   };
 
   // 删除连接
-  const handleDelete = async () => {
+  const handleDeleteConnection = async () => {
     if (!selectedConnection) return;
+    if (!confirm('确定要删除这个连接吗？')) return;
     
-    if (!window.confirm(`确定要删除连接 "${selectedConnection.name}" 吗？`)) {
-      return;
-    }
-
-    setDeleting(true);
+    setDeleteLoading(true);
     try {
       await deleteConnection(selectedConnection.id);
-      toast.success('连接已删除');
+      success('删除成功', '连接已被删除');
       setSelectedConnection(null);
-      // 刷新列表会由 ConnectionList 组件处理
       window.location.href = '/dashboard';
-    } catch (error) {
-      console.error('Failed to delete connection:', error);
+    } catch {
+      error('删除失败', '无法删除连接');
     } finally {
-      setDeleting(false);
+      setDeleteLoading(false);
     }
   };
 
+  const healthyServices = health?.services.filter((s) => s.healthy).length || 0;
+  const totalServices = health?.services.length || 0;
+
   return (
-    <div className="container-fluid" style={{ width: '98%' }}>
-      <div className="row">
-        {/* 左侧连接列表 (桌面端显示) */}
-        {!isMobile && (
-          <div className="col-12 col-md-5 col-xl-4 ps-0">
-            <ConnectionList 
-              scrollbar={true} 
-              activeId={id}
-            />
-          </div>
-        )}
-
-        {/* 右侧内容区域 */}
-        <div className="col-12 col-md-7 col-xl-8 mb-3 gx-0">
-          {selectedConnection ? (
-            // 连接详情
-            <div className="shadow-box big-padding">
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>{selectedConnection.name}</h2>
-                <div className="d-flex gap-2">
-                  <button 
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={handleTest}
-                    disabled={testing}
-                  >
-                    {testing ? (
-                      <FontAwesomeIcon icon={faSpinner} spin className="me-1" />
-                    ) : (
-                      <FontAwesomeIcon icon={faPlay} className="me-1" />
-                    )}
-                    测试连接
-                  </button>
-                  <button 
-                    className="btn btn-outline-danger btn-sm"
-                    onClick={handleDelete}
-                    disabled={deleting}
-                  >
-                    {deleting ? (
-                      <FontAwesomeIcon icon={faSpinner} spin className="me-1" />
-                    ) : (
-                      <FontAwesomeIcon icon={faTrash} className="me-1" />
-                    )}
-                    删除
-                  </button>
-                </div>
-              </div>
-
-              {/* 连接信息 */}
-              <div className="row mb-4">
-                <div className="col-md-6">
-                  <table className="table">
-                    <tbody>
-                      <tr>
-                        <td className="text-muted">类型</td>
-                        <td><strong>{selectedConnection.db_type.toUpperCase()}</strong></td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">主机</td>
-                        <td>{selectedConnection.host || '-'}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">端口</td>
-                        <td>{selectedConnection.port || '-'}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div className="col-md-6">
-                  <table className="table">
-                    <tbody>
-                      <tr>
-                        <td className="text-muted">用户名</td>
-                        <td>{selectedConnection.username || '-'}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">数据库</td>
-                        <td>{selectedConnection.database || '-'}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">创建时间</td>
-                        <td>{selectedConnection.created_at}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* 测试结果 */}
-              {testResult && (
-                <div className={`alert ${testResult.success ? 'alert-success' : 'alert-danger'}`}>
-                  <FontAwesomeIcon 
-                    icon={testResult.success ? faCheckCircle : faTimesCircle} 
-                    className="me-2"
-                  />
-                  {testResult.success 
-                    ? `连接成功，延迟 ${testResult.latency_ms}ms`
-                    : `连接失败: ${testResult.error}`
-                  }
-                </div>
-              )}
-            </div>
-          ) : (
-            // 欢迎页面 / 仪表盘
-            <div className="shadow-box big-padding">
-              <h2 className="mb-4">数据库管理仪表盘</h2>
-
-              {/* 服务状态 */}
-              {healthData && (
-                <div className="mb-4">
-                  <h5 className="settings-subheading">服务状态</h5>
-                  <div className="row mt-3">
-                    {healthData.services.map((service) => (
-                      <div key={service.name} className="col-md-4 mb-3">
-                        <div className={`shadow-box ${service.healthy ? '' : 'border border-danger'}`}>
-                          <div className="d-flex align-items-center">
-                            <span 
-                              className={`status-dot ${service.healthy ? 'healthy' : 'unhealthy'}`}
-                            />
-                            <div>
-                              <strong>{service.name}</strong>
-                              <div className="small text-muted">
-                                {service.healthy ? '运行正常' : service.error || '服务异常'}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 快速操作 */}
-              <div>
-                <h5 className="settings-subheading">快速操作</h5>
-                <div className="mt-3">
-                  <button 
-                    className="btn btn-primary me-2"
-                    onClick={() => setDialogOpen(true)}
-                  >
-                    <FontAwesomeIcon icon={faPlus} className="me-2" />
-                    添加数据库连接
-                  </button>
-                </div>
-              </div>
-
-              {/* 使用提示 */}
-              <div className="mt-4 p-3 bg-light rounded">
-                <h6>使用说明</h6>
-                <ul className="mb-0 small">
-                  <li>点击左侧列表中的连接查看详情</li>
-                  <li>使用"测试连接"检查数据库是否可访问</li>
-                  <li>支持 MySQL、PostgreSQL、SQLite、Redis、MongoDB 等多种数据库</li>
-                </ul>
-              </div>
-            </div>
-          )}
+    <div className="h-full flex flex-col gap-6">
+      {/* 页面标题 */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">
+            <GlitchText text="数据库管理中心" className="text-cyber-text" />
+          </h1>
+          <p className="text-cyber-muted mt-1">
+            <TypeWriter text="管理你的所有数据库连接" speed={30} cursor={false} />
+          </p>
         </div>
       </div>
 
+      {/* 统计卡片 */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="服务状态"
+          value={`${healthyServices}/${totalServices}`}
+          icon={<Activity className="w-5 h-5 text-cyber-cyan" />}
+          color="cyan"
+          delay={0}
+        />
+        <StatCard
+          title="数据库连接"
+          value="--"
+          icon={<Database className="w-5 h-5 text-cyber-purple" />}
+          color="purple"
+          delay={0.1}
+        />
+        <StatCard
+          title="活跃会话"
+          value="0"
+          icon={<Server className="w-5 h-5 text-cyber-pink" />}
+          color="pink"
+          delay={0.2}
+        />
+        <StatCard
+          title="系统状态"
+          value={health?.status === 'healthy' ? '正常' : '异常'}
+          icon={
+            health?.status === 'healthy' ? (
+              <CheckCircle2 className="w-5 h-5 text-cyber-green" />
+            ) : (
+              <XCircle className="w-5 h-5 text-red-500" />
+            )
+          }
+          color="green"
+          delay={0.3}
+        />
+      </div>
+
+      {/* 主内容区 */}
+      <div className={cn(
+        'flex-1 grid gap-6',
+        isMobile ? 'grid-cols-1' : 'grid-cols-12'
+      )}>
+        {/* 连接列表 */}
+        <div className={cn(isMobile ? '' : 'col-span-5 xl:col-span-4')}>
+          <Card className="h-full p-4">
+            <ConnectionList
+              activeId={id}
+              onSelect={(conn) => setSelectedConnection(conn)}
+            />
+          </Card>
+        </div>
+
+        {/* 连接详情 */}
+        {!isMobile && (
+          <div className="col-span-7 xl:col-span-8">
+            <Card className="h-full p-6">
+              {selectedConnection ? (
+                <motion.div
+                  key={selectedConnection.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="h-full flex flex-col"
+                >
+                  {/* 详情头部 */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div>
+                      <h2 className="text-xl font-semibold text-cyber-text">
+                        {selectedConnection.name}
+                      </h2>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="cyan">
+                          {selectedConnection.db_type.toUpperCase()}
+                        </Badge>
+                        {testStatus === 'success' && (
+                          <Badge variant="green">已连接</Badge>
+                        )}
+                        {testStatus === 'error' && (
+                          <Badge variant="red">连接失败</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleTestConnection}
+                        disabled={testStatus === 'testing'}
+                      >
+                        {testStatus === 'testing' ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Play className="w-4 h-4" />
+                        )}
+                        测试
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={handleDeleteConnection}
+                        disabled={deleteLoading}
+                      >
+                        {deleteLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                        删除
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* 连接信息 */}
+                  <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-cyber-bg/50 border border-cyber-border">
+                    <div>
+                      <span className="text-sm text-cyber-muted">主机</span>
+                      <p className="text-cyber-text font-mono">
+                        {selectedConnection.host || '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-cyber-muted">端口</span>
+                      <p className="text-cyber-text font-mono">
+                        {selectedConnection.port || '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-cyber-muted">用户名</span>
+                      <p className="text-cyber-text font-mono">
+                        {selectedConnection.username || '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-cyber-muted">数据库</span>
+                      <p className="text-cyber-text font-mono">
+                        {selectedConnection.database || '-'}
+                      </p>
+                    </div>
+                    {selectedConnection.file_path && (
+                      <div className="col-span-2">
+                        <span className="text-sm text-cyber-muted">文件路径</span>
+                        <p className="text-cyber-text font-mono">
+                          {selectedConnection.file_path}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 服务状态 */}
+                  {health && (
+                    <div className="mt-6">
+                      <h3 className="text-sm font-medium text-cyber-muted mb-3">
+                        后端服务状态
+                      </h3>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        {health.services.map((service) => (
+                          <motion.div
+                            key={service.name}
+                            className={cn(
+                              'p-3 rounded-lg border',
+                              service.healthy
+                                ? 'bg-cyber-green/5 border-cyber-green/30'
+                                : 'bg-red-500/5 border-red-500/30'
+                            )}
+                            whileHover={{ scale: 1.02 }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <motion.div
+                                className={cn(
+                                  'w-2 h-2 rounded-full',
+                                  service.healthy ? 'bg-cyber-green' : 'bg-red-500'
+                                )}
+                                animate={service.healthy ? {
+                                  scale: [1, 1.2, 1],
+                                  opacity: [1, 0.7, 1],
+                                } : {}}
+                                transition={{ duration: 2, repeat: Infinity }}
+                              />
+                              <span className="text-sm text-cyber-text">
+                                {service.name}
+                              </span>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-cyber-muted">
+                  <Database className="w-16 h-16 mb-4 opacity-30" />
+                  <p>选择一个连接查看详情</p>
+                </div>
+              )}
+            </Card>
+          </div>
+        )}
+      </div>
+
       {/* 添加连接对话框 */}
-      <ConnectionDialog 
+      <ConnectionDialog
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onSuccess={() => {
-          window.location.reload();
-        }}
+        onSuccess={() => window.location.reload()}
       />
     </div>
   );

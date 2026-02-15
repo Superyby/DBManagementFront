@@ -1,0 +1,280 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Styles */
+@layer base {
+  * {
+    @apply border-cyber-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-cyber-bg text-cyber-text font-sans antialiased;
+    background-image: 
+      linear-gradient(rgba(0, 255, 242, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 242, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: -1px -1px;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cyber-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cyber-border rounded-full;
+    border: 2px solid transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-cyber-muted;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-cyber-cyan/30 text-cyber-text;
+  }
+}
+
+/* Component Styles */
+@layer components {
+  /* Neon Glow Effects */
+  .neon-text-cyan {
+    text-shadow: 0 0 10px #00fff2, 0 0 20px #00fff2, 0 0 40px #00fff2;
+  }
+
+  .neon-text-purple {
+    text-shadow: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff;
+  }
+
+  .neon-text-pink {
+    text-shadow: 0 0 10px #ff00aa, 0 0 20px #ff00aa, 0 0 40px #ff00aa;
+  }
+
+  /* Glass Effect */
+  .glass {
+    @apply bg-cyber-surface/80 backdrop-blur-xl;
+    border: 1px solid rgba(0, 255, 242, 0.1);
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+
+  .glass-hover:hover {
+    @apply bg-cyber-surface-light/90;
+    border-color: rgba(0, 255, 242, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 242, 0.1);
+  }
+
+  /* Neon Border */
+  .neon-border {
+    position: relative;
+    border: 1px solid transparent;
+    background: linear-gradient(#12121a, #12121a) padding-box,
+                linear-gradient(135deg, #00fff2, #bf00ff, #ff00aa) border-box;
+  }
+
+  .neon-border-animated {
+    position: relative;
+  }
+
+  .neon-border-animated::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, #00fff2, #bf00ff, #ff00aa, #00fff2);
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: border-flow 3s linear infinite;
+  }
+
+  /* Scan Line Effect */
+  .scan-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00fff2, transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Cyber Button */
+  .cyber-btn {
+    @apply relative px-6 py-3 font-mono font-semibold uppercase tracking-wider;
+    @apply bg-cyber-surface border border-cyber-cyan/50 text-cyber-cyan;
+    @apply transition-all duration-300 overflow-hidden;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+  .cyber-btn::before {
+    content: '';
+    @apply absolute inset-0 bg-cyber-cyan/10 translate-x-[-100%];
+    @apply transition-transform duration-300;
+  }
+
+  .cyber-btn:hover::before {
+    @apply translate-x-0;
+  }
+
+  .cyber-btn:hover {
+    @apply border-cyber-cyan shadow-neon-cyan;
+  }
+
+  /* Cyber Card */
+  .cyber-card {
+    @apply relative bg-cyber-surface border border-cyber-border rounded-lg overflow-hidden;
+    @apply transition-all duration-300;
+  }
+
+  .cyber-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-[1px];
+    background: linear-gradient(90deg, transparent, #00fff2, transparent);
+  }
+
+  .cyber-card:hover {
+    @apply border-cyber-cyan/30 shadow-glow-sm;
+    transform: translateY(-2px);
+  }
+
+  /* Status Indicators */
+  .status-online {
+    @apply relative w-3 h-3 rounded-full bg-cyber-green;
+    box-shadow: 0 0 10px #00ff88;
+  }
+
+  .status-online::after {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-cyber-green animate-ping;
+  }
+
+  .status-offline {
+    @apply w-3 h-3 rounded-full bg-cyber-red;
+    box-shadow: 0 0 10px #ff0055;
+  }
+
+  .status-warning {
+    @apply w-3 h-3 rounded-full bg-cyber-orange;
+    box-shadow: 0 0 10px #ff8800;
+  }
+
+  /* Input Fields */
+  .cyber-input {
+    @apply w-full px-4 py-3 bg-cyber-bg border border-cyber-border rounded-lg;
+    @apply text-cyber-text placeholder-cyber-muted;
+    @apply focus:outline-none focus:border-cyber-cyan focus:shadow-glow-sm;
+    @apply transition-all duration-300;
+  }
+
+  /* Data Display */
+  .data-value {
+    @apply font-mono text-cyber-cyan text-2xl font-bold;
+    text-shadow: 0 0 10px rgba(0, 255, 242, 0.5);
+  }
+
+  /* Terminal Style */
+  .terminal {
+    @apply font-mono text-sm bg-cyber-bg p-4 rounded-lg border border-cyber-border;
+  }
+
+  .terminal-prompt::before {
+    content: '> ';
+    @apply text-cyber-cyan;
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-pink;
+  }
+
+  .border-gradient {
+    border-image: linear-gradient(135deg, #00fff2, #bf00ff, #ff00aa) 1;
+  }
+
+  /* Hide scrollbar but allow scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Animations */
+@keyframes border-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Glitch Effect */
+@keyframes glitch-1 {
+  0%, 100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  20% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(-5px, 5px);
+  }
+  40% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(5px, -5px);
+  }
+  60% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(-5px, 5px);
+  }
+  80% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(5px, -5px);
+  }
+}

@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Layout } from './components/layout/Layout';
-import { Dashboard } from './pages/Dashboard';
+import { ImmersiveLayout } from './components/layout/ImmersiveLayout';
+import { DashboardBold } from './pages/DashboardBold';
 import { AddConnection } from './pages/AddConnection';
+import { Monitor } from './pages/Monitor';
 import { Settings } from './pages/Settings';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <ImmersiveLayout />,
     children: [
       {
         index: true,
@@ -15,19 +16,23 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <Dashboard />,
+        element: <DashboardBold />,
       },
       {
         path: 'dashboard/:id',
-        element: <Dashboard />,
+        element: <DashboardBold />,
       },
       {
         path: 'connections',
-        element: <Dashboard />,
+        element: <DashboardBold />,
       },
       {
         path: 'add',
         element: <AddConnection />,
+      },
+      {
+        path: 'monitor/:id',
+        element: <Monitor />,
       },
       {
         path: 'settings',

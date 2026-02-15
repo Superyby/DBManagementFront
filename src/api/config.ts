@@ -24,6 +24,11 @@ export const API_ENDPOINTS = {
   connectionById: (id: string) => `/connections/${id}`,
   connectionTest: (id: string) => `/connections/${id}/test`,
   
+  // 监控
+  connectionStats: (id: string) => `/connections/${id}/stats`,
+  connectionDatabases: (id: string) => `/connections/${id}/databases`,
+  connectionProcesses: (id: string) => `/connections/${id}/processes`,
+  
   // 查询服务
   query: '/query',
   

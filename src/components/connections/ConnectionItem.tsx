@@ -1,6 +1,7 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDatabase, faServer, faCircle } from '@fortawesome/free-solid-svg-icons';
-import type { ConnectionItem as ConnectionItemType, DbType, DB_TYPES } from '../../types/connection';
+import { motion } from 'framer-motion';
+import { Database, Server, Wifi, WifiOff, Loader2 } from 'lucide-react';
+import type { ConnectionItem as ConnectionItemType, DbType } from '../../types/connection';
+import { cn } from '../../lib/utils';
 import dayjs from 'dayjs';
 
 interface ConnectionItemProps {
@@ -9,127 +10,148 @@ interface ConnectionItemProps {
   onClick?: () => void;
   onTest?: () => void;
   testStatus?: 'idle' | 'testing' | 'success' | 'error';
+  index?: number;
 }
 
-// 获取数据库类型的颜色
-function getDbTypeColor(dbType: DbType): string {
-  const colors: Record<DbType, string> = {
-    mysql: '#00758f',
-    postgres: '#336791',
-    sqlite: '#003b57',
-    redis: '#dc382d',
-    mongodb: '#47a248',
-    clickhouse: '#ffcc01',
-    elasticsearch: '#005571',
-    oracle: '#f80000',
-    sqlserver: '#cc2927',
-    mariadb: '#003545',
-    cassandra: '#1287b1',
-    influxdb: '#22adf6',
-    db2: '#054ada',
-    couchdb: '#e42528',
-    neo4j: '#008cc1',
-    memcached: '#748c16',
-    hbase: '#df0000',
-    milvus: '#00a1ea',
-  };
-  return colors[dbType] || '#666';
-}
+// 数据库类型颜色映射
+const dbTypeColors: Record<DbType, { primary: string; bg: string }> = {
+  mysql: { primary: '#00758f', bg: 'rgba(0, 117, 143, 0.1)' },
+  postgres: { primary: '#336791', bg: 'rgba(51, 103, 145, 0.1)' },
+  sqlite: { primary: '#003b57', bg: 'rgba(0, 59, 87, 0.1)' },
+  redis: { primary: '#dc382d', bg: 'rgba(220, 56, 45, 0.1)' },
+  mongodb: { primary: '#47a248', bg: 'rgba(71, 162, 72, 0.1)' },
+  clickhouse: { primary: '#ffcc01', bg: 'rgba(255, 204, 1, 0.1)' },
+  elasticsearch: { primary: '#005571', bg: 'rgba(0, 85, 113, 0.1)' },
+  oracle: { primary: '#f80000', bg: 'rgba(248, 0, 0, 0.1)' },
+  sqlserver: { primary: '#cc2927', bg: 'rgba(204, 41, 39, 0.1)' },
+  mariadb: { primary: '#003545', bg: 'rgba(0, 53, 69, 0.1)' },
+  cassandra: { primary: '#1287b1', bg: 'rgba(18, 135, 177, 0.1)' },
+  influxdb: { primary: '#22adf6', bg: 'rgba(34, 173, 246, 0.1)' },
+  db2: { primary: '#054ada', bg: 'rgba(5, 74, 218, 0.1)' },
+  couchdb: { primary: '#e42528', bg: 'rgba(228, 37, 40, 0.1)' },
+  neo4j: { primary: '#008cc1', bg: 'rgba(0, 140, 193, 0.1)' },
+  memcached: { primary: '#00875a', bg: 'rgba(0, 135, 90, 0.1)' },
+  hbase: { primary: '#c72c48', bg: 'rgba(199, 44, 72, 0.1)' },
+  milvus: { primary: '#00a1ea', bg: 'rgba(0, 161, 234, 0.1)' },
+};
 
-// 获取数据库类型的显示名称
-function getDbTypeName(dbType: DbType): string {
-  const names: Record<DbType, string> = {
-    mysql: 'MySQL',
-    postgres: 'PostgreSQL',
-    sqlite: 'SQLite',
-    redis: 'Redis',
-    mongodb: 'MongoDB',
-    clickhouse: 'ClickHouse',
-    elasticsearch: 'Elasticsearch',
-    oracle: 'Oracle',
-    sqlserver: 'SQL Server',
-    mariadb: 'MariaDB',
-    cassandra: 'Cassandra',
-    influxdb: 'InfluxDB',
-    db2: 'DB2',
-    couchdb: 'CouchDB',
-    neo4j: 'Neo4j',
-    memcached: 'Memcached',
-    hbase: 'HBase',
-    milvus: 'Milvus',
-  };
-  return names[dbType] || dbType;
-}
-
-export function ConnectionItem({ 
-  connection, 
-  isActive = false, 
+export function ConnectionItem({
+  connection,
+  isActive = false,
   onClick,
+  onTest,
   testStatus = 'idle',
+  index = 0,
 }: ConnectionItemProps) {
-  const { name, db_type, host, port, database, created_at } = connection;
+  const colors = dbTypeColors[connection.db_type] || { primary: '#00fff2', bg: 'rgba(0, 255, 242, 0.1)' };
 
-  // 状态指示器颜色
-  const getStatusColor = () => {
+  // 状态图标
+  const StatusIcon = () => {
     switch (testStatus) {
       case 'testing':
-        return '#f8a306'; // 黄色
+        return <Loader2 className="w-4 h-4 animate-spin text-cyber-cyan" />;
       case 'success':
-        return '#5cdd8b'; // 绿色
+        return <Wifi className="w-4 h-4 text-cyber-green" />;
       case 'error':
-        return '#dc3545'; // 红色
+        return <WifiOff className="w-4 h-4 text-red-500" />;
       default:
-        return '#aaa'; // 灰色
+        return null;
     }
   };
 
   return (
-    <div 
-      className={`item ${isActive ? 'active' : ''}`}
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.05 }}
       onClick={onClick}
+      className={cn(
+        'group relative p-4 rounded-lg cursor-pointer',
+        'border transition-all duration-300',
+        isActive
+          ? 'bg-cyber-surface border-cyber-cyan/50 shadow-[0_0_20px_rgba(0,255,242,0.15)]'
+          : 'bg-cyber-surface/50 border-cyber-border hover:border-cyber-cyan/30 hover:bg-cyber-surface'
+      )}
+      whileHover={{ scale: 1.02, x: 4 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <div className="d-flex align-items-center">
-        {/* 状态指示器 */}
-        <FontAwesomeIcon 
-          icon={faCircle} 
-          style={{ 
-            fontSize: '8px', 
-            color: getStatusColor(),
-            marginRight: '10px',
-          }}
-        />
+      {/* 左侧发光条 */}
+      <motion.div
+        className="absolute left-0 top-2 bottom-2 w-1 rounded-r"
+        style={{ backgroundColor: colors.primary }}
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: isActive ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+      />
 
-        {/* 数据库图标 */}
-        <FontAwesomeIcon 
-          icon={db_type === 'redis' || db_type === 'memcached' ? faServer : faDatabase}
-          style={{ 
-            color: getDbTypeColor(db_type),
-            marginRight: '12px',
-            fontSize: '18px',
-          }}
-        />
+      <div className="flex items-center gap-4">
+        {/* 图标 */}
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: colors.bg }}
+        >
+          {connection.db_type === 'redis' ? (
+            <Server className="w-5 h-5" style={{ color: colors.primary }} />
+          ) : (
+            <Database className="w-5 h-5" style={{ color: colors.primary }} />
+          )}
+        </div>
 
-        {/* 连接信息 */}
-        <div className="info flex-grow-1">
-          <div className="d-flex align-items-center justify-content-between">
-            <strong>{name}</strong>
-            <span 
-              className="db-badge"
-              style={{ backgroundColor: getDbTypeColor(db_type) }}
+        {/* 信息 */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-cyber-text truncate">{connection.name}</h3>
+            <span
+              className="px-2 py-0.5 text-xs rounded-full"
+              style={{ backgroundColor: colors.bg, color: colors.primary }}
             >
-              {getDbTypeName(db_type)}
+              {connection.db_type.toUpperCase()}
             </span>
           </div>
-          <div className="text-muted small mt-1">
-            {host && port ? `${host}:${port}` : ''}
-            {database ? ` / ${database}` : ''}
-            {!host && connection.file_path ? connection.file_path : ''}
-          </div>
-          <div className="text-muted small">
-            创建于 {dayjs(created_at).format('YYYY-MM-DD HH:mm')}
-          </div>
+          <p className="text-sm text-cyber-muted truncate mt-0.5">
+            {connection.host ? `${connection.host}:${connection.port}` : connection.file_path || '-'}
+          </p>
+        </div>
+
+        {/* 状态和操作 */}
+        <div className="flex items-center gap-2">
+          <StatusIcon />
+          
+          {/* 测试按钮 */}
+          <motion.button
+            onClick={(e) => {
+              e.stopPropagation();
+              onTest?.();
+            }}
+            className={cn(
+              'opacity-0 group-hover:opacity-100 transition-opacity',
+              'px-3 py-1.5 text-xs rounded-md',
+              'bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30',
+              'hover:bg-cyber-cyan/20'
+            )}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            disabled={testStatus === 'testing'}
+          >
+            {testStatus === 'testing' ? '测试中...' : '测试'}
+          </motion.button>
         </div>
       </div>
-    </div>
+
+      {/* 底部时间 */}
+      <div className="mt-2 flex items-center justify-between text-xs text-cyber-muted">
+        <span>创建于 {dayjs(connection.created_at).format('YYYY-MM-DD HH:mm')}</span>
+      </div>
+
+      {/* 悬停发光效果 */}
+      <motion.div
+        className="absolute inset-0 rounded-lg pointer-events-none"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        style={{
+          boxShadow: `0 0 30px ${colors.primary}20`,
+        }}
+      />
+    </motion.div>
   );
 }

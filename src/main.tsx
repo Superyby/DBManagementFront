@@ -1,27 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import './styles/app.scss'
+import './styles/globals.css'
 import { router } from './router'
+import { NotificationProvider } from './components/effects/Notification'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <ToastContainer
-      position="bottom-right"
-      autoClose={3000}
-      hideProgressBar={false}
-      newestOnTop
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="colored"
-    />
+    <NotificationProvider>
+      <RouterProvider router={router} />
+    </NotificationProvider>
   </React.StrictMode>,
 )
 

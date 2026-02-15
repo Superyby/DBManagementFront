@@ -119,3 +119,57 @@ export interface HealthResponse {
   timestamp: string;
   connections?: number;
 }
+
+// ===================== 监控相关类型 =====================
+
+// 数据库服务器统计
+export interface DatabaseStats {
+  uptime_seconds: number;
+  total_queries: number;
+  active_connections: number;
+  max_connections: number;
+  slow_queries: number;
+  queries_per_second: number;
+  bytes_received: number;
+  bytes_sent: number;
+  buffer_pool_size?: number;
+  server_version?: string;
+  extra?: Record<string, string>;
+}
+
+// 活跃进程
+export interface ProcessInfo {
+  id: number;
+  user: string;
+  host: string;
+  db?: string;
+  command: string;
+  time: number;
+  state?: string;
+  info?: string;
+}
+
+// 数据库信息
+export interface DatabaseInfo {
+  name: string;
+  tables_count: number;
+  size_mb: number;
+}
+
+// 连接池统计
+export interface ConnectionPoolStats {
+  active: number;
+  idle: number;
+  max_size: number;
+  is_connected: boolean;
+}
+
+// 监控概览
+export interface MonitorOverview {
+  connection_id: string;
+  connection_name: string;
+  db_type: string;
+  stats: DatabaseStats;
+  pool: ConnectionPoolStats;
+  timestamp: string;
+}
