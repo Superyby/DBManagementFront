@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
+import 'oppo-sans-4'
 import './styles/globals.css'
 import { router } from './router'
 import { NotificationProvider } from './components/effects/Notification'

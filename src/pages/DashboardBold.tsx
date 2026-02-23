@@ -75,16 +75,35 @@ export function DashboardBold() {
       .finally(() => setLoading(false));
 
     // Health check loads independently in the background
+    // Note: health endpoint returns raw object (not wrapped in {code, data})
     getAggregatedHealth()
-      .then(r => setHealth(r.data))
+      .then(r => {
+        const healthData = (r as any)?.data ? (r as any).data : r;
+        setHealth(healthData as AggregatedHealth);
+      })
       .catch(() => null);
   }, []);
 
   useEffect(() => {
     if (id) {
-      getConnection(id).then(r => setSelectedConnection(r.data)).catch(() => setSelectedConnection(null));
+      setTestStatus('idle');
+      getConnection(id)
+        .then(r => {
+          setSelectedConnection(r.data);
+          // Auto-test connection in background
+          if (r.data) {
+            setTestStatus('testing');
+            testConnection(r.data.id)
+              .then(res => {
+                setTestStatus(res.data?.success ? 'success' : 'error');
+              })
+              .catch(() => setTestStatus('error'));
+          }
+        })
+        .catch(() => setSelectedConnection(null));
     } else {
       setSelectedConnection(null);
+      setTestStatus('idle');
     }
   }, [id]);
 
@@ -139,12 +158,12 @@ export function DashboardBold() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <DataPanel
           label="SYSTEM STATUS"
-          value={health?.status === 'healthy' ? 'ONLINE' : 'DEGRADED'}
-          color={health?.status === 'healthy' ? '#22c55e' : '#f59e0b'}
+          value={!health ? 'CHECKING' : health.status === 'healthy' ? 'ONLINE' : 'DEGRADED'}
+          color={!health ? '#3b82f6' : health.status === 'healthy' ? '#22c55e' : '#f59e0b'}
         />
         <DataPanel label="ACTIVE SERVICES" value={`${healthyServices}/${totalServices}`} />
-        <DataPanel label="CONNECTIONS" value={connections.length} trend="stable" />
-        <DataPanel label="UPTIME" value="99.9" unit="%" trend="up" />
+        <DataPanel label="CONNECTIONS" value={connections.length} />
+        <DataPanel label="SERVICES" value={healthyServices > 0 ? 'RUNNING' : 'OFFLINE'} color={healthyServices > 0 ? '#22c55e' : '#ef4444'} />
       </div>
 
       <div className={cn('grid gap-6', isMobile ? 'grid-cols-1' : 'grid-cols-12')}>
@@ -220,10 +239,10 @@ export function DashboardBold() {
                       <div>
                         <div className="flex items-center gap-3 mb-1">
                           <StatusIndicator
-                            status={testStatus === 'success' ? 'online' : testStatus === 'error' ? 'offline' : testStatus === 'testing' ? 'loading' : 'offline'}
+                            status={testStatus === 'success' ? 'online' : testStatus === 'error' ? 'offline' : 'loading'}
                           />
                           <span className="text-xs text-[var(--text-m)] uppercase">
-                            {testStatus === 'testing' ? 'Testing...' : testStatus.toUpperCase()}
+                            {testStatus === 'testing' || testStatus === 'idle' ? 'Testing...' : testStatus === 'success' ? 'ONLINE' : 'OFFLINE'}
                           </span>
                         </div>
                         <h2 className="text-lg font-semibold text-[var(--text)]">{selectedConnection.name}</h2>
@@ -316,7 +335,7 @@ export function DashboardBold() {
                     <p className="text-xs text-[var(--text-s)] mt-0.5">{selectedConnection.db_type.toUpperCase()}</p>
                   </div>
                   <StatusIndicator
-                    status={testStatus === 'success' ? 'online' : testStatus === 'error' ? 'offline' : testStatus === 'testing' ? 'loading' : 'offline'}
+                    status={testStatus === 'success' ? 'online' : testStatus === 'error' ? 'offline' : 'loading'}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-2 mb-3">

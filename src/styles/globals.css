@@ -54,6 +54,7 @@ html.light {
     background-color: var(--bg);
     color: var(--text);
     @apply font-sans antialiased;
+    font-weight: 600;
     cursor: none !important;
     transition: background-color 0.2s ease, color 0.2s ease;
   }

@@ -35,6 +35,9 @@ importers:
       lucide-react:
         specifier: ^0.400.0
         version: 0.400.0(react@19.2.4)
+      oppo-sans-4:
+        specifier: ^1.0.0
+        version: 1.0.0
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -693,6 +696,9 @@ packages:
   object-hash@3.0.0:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
+
+  oppo-sans-4@1.0.0:
+    resolution: {integrity: sha512-PpTUHbXItgvx44B+kjz7SifqptZolOrOeHEAqMVkc/1eNiqyxkLdTAS0pz1YeSb4SkJCsFAv80F2eCzpQJxN7w==}
 
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
@@ -1489,6 +1495,8 @@ snapshots:
   object-assign@4.1.1: {}
 
   object-hash@3.0.0: {}
+
+  oppo-sans-4@1.0.0: {}
 
   path-parse@1.0.7: {}
 
