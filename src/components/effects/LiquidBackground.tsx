@@ -11,7 +11,7 @@ interface LiquidBlobProps {
 // 液态流体背景 - 类似 lava lamp 效果
 export function LiquidBlob({ 
   className = '',
-  colors = ['#00fff2', '#bf00ff', '#ff00aa', '#00ff88'],
+  colors = ['#3b82f6', '#8b5cf6', '#6366f1', '#2563eb'],
   blur = 80,
   speed = 20
 }: LiquidBlobProps) {
@@ -62,7 +62,7 @@ export function LiquidBlob({
       {colors.map((color, i) => (
         <div
           key={i}
-          className="blob absolute w-[40vmax] h-[40vmax] rounded-full opacity-40"
+          className="blob absolute w-[40vmax] h-[40vmax] rounded-full opacity-20"
           style={{
             background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
             left: `${25 * i}%`,
@@ -102,7 +102,7 @@ export function MatrixRain({ className = '' }: { className?: string }) {
       ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#00fff2';
+      ctx.fillStyle = '#3b82f6';
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
@@ -113,9 +113,9 @@ export function MatrixRain({ className = '' }: { className?: string }) {
 
         // 渐变颜色
         const gradient = ctx.createLinearGradient(x, y - 50, x, y);
-        gradient.addColorStop(0, 'rgba(0, 255, 242, 0)');
-        gradient.addColorStop(0.5, 'rgba(0, 255, 242, 0.5)');
-        gradient.addColorStop(1, '#00fff2');
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0)');
+        gradient.addColorStop(0.5, 'rgba(59, 130, 246, 0.5)');
+        gradient.addColorStop(1, '#3b82f6');
         ctx.fillStyle = gradient;
 
         ctx.fillText(char, x, y);
@@ -177,7 +177,7 @@ export function ScanLines({ opacity = 0.1 }: { opacity?: number }) {
 }
 
 // 六边形网格背景
-export function HexGrid({ color = '#00fff2', opacity = 0.1 }: { color?: string; opacity?: number }) {
+export function HexGrid({ color = '#3b82f6', opacity = 0.1 }: { color?: string; opacity?: number }) {
   return (
     <div 
       className="fixed inset-0 pointer-events-none"

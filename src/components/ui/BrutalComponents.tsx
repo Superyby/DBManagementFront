@@ -16,7 +16,7 @@ export function FloatingCard3D({
   children,
   className = '',
   depth = 20,
-  glowColor = '#00fff2',
+  glowColor = '#3b82f6',
   borderStyle = 'brutal',
 }: FloatingCard3DProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -74,9 +74,9 @@ export function FloatingCard3D({
 
   const borderStyles = {
     brutal: 'border-4 border-white/20 bg-black/80',
-    neon: 'border border-cyber-cyan/50 bg-black/60 shadow-[0_0_30px_rgba(0,255,242,0.2)]',
+    neon: 'border border-blue-500/30 bg-black/60 shadow-[0_0_20px_rgba(59,130,246,0.1)]',
     glass: 'border border-white/10 bg-white/5 backdrop-blur-xl',
-    wire: 'border border-dashed border-cyber-cyan/30 bg-transparent',
+    wire: 'border border-dashed border-blue-500/20 bg-transparent',
   };
 
   return (
@@ -109,10 +109,10 @@ export function FloatingCard3D({
       </div>
 
       {/* 边角装饰 */}
-      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyber-cyan" />
-      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyber-cyan" />
-      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyber-cyan" />
-      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyber-cyan" />
+      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-blue-500/30" />
+      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-blue-500/30" />
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-blue-500/30" />
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-blue-500/30" />
     </div>
   );
 }
@@ -138,9 +138,9 @@ export function BrutalButton({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const variants = {
-    primary: 'bg-cyber-cyan text-[#000] hover:bg-cyber-cyan/90 shadow-[0_0_15px_rgba(0,255,242,0.5)]',
-    danger: 'bg-red-500 text-white hover:bg-red-600 shadow-[0_0_15px_rgba(255,0,85,0.5)]',
-    ghost: 'bg-transparent text-white border-2 border-white hover:bg-white/10',
+    primary: 'bg-blue-500 text-white hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)]',
+    danger: 'bg-red-500 text-white hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)]',
+    ghost: 'bg-transparent text-white border-2 border-zinc-600 hover:bg-white/10',
   };
 
   const sizes = {
@@ -217,7 +217,7 @@ interface DataPanelProps {
   color?: string;
 }
 
-export function DataPanel({ label, value, unit, trend, color = '#00fff2' }: DataPanelProps) {
+export function DataPanel({ label, value, unit, trend, color = '#3b82f6' }: DataPanelProps) {
   const valueRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -290,10 +290,10 @@ interface StatusIndicatorProps {
 
 export function StatusIndicator({ status, label, size = 'md' }: StatusIndicatorProps) {
   const colors = {
-    online: '#00ff88',
-    offline: '#ff0055',
-    warning: '#ffaa00',
-    loading: '#00fff2',
+    online: '#22c55e',
+    offline: '#ef4444',
+    warning: '#f59e0b',
+    loading: '#3b82f6',
   };
 
   const sizes = {
@@ -344,7 +344,7 @@ interface TerminalInputProps {
 export function TerminalInput({ value, onChange, placeholder, prefix = '>' }: TerminalInputProps) {
   return (
     <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-4 py-3 font-mono">
-      <span className="text-cyber-cyan">{prefix}</span>
+      <span className="text-blue-500">{prefix}</span>
       <input
         type="text"
         value={value}
@@ -353,7 +353,7 @@ export function TerminalInput({ value, onChange, placeholder, prefix = '>' }: Te
         className="flex-1 bg-transparent text-white outline-none placeholder-white/30"
       />
       <motion.span
-        className="w-2 h-5 bg-cyber-cyan"
+        className="w-2 h-5 bg-blue-500"
         animate={{ opacity: [1, 0, 1] }}
         transition={{ duration: 1, repeat: Infinity }}
       />

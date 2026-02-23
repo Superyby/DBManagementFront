@@ -41,7 +41,7 @@ function formatBytes(bytes: number): string {
 function CyberChart({
   data,
   label,
-  color = '#00fff2',
+  color = '#3b82f6',
   height = 120,
 }: {
   data: number[];
@@ -171,7 +171,7 @@ function RingGauge({
   value,
   max,
   label,
-  color = '#00fff2',
+  color = '#3b82f6',
   size = 100,
 }: {
   value: number;
@@ -252,7 +252,7 @@ function ConnectionPicker() {
 
   return (
     <div className="relative min-h-screen">
-      <LiquidBlob colors={['#00fff2', '#bf00ff', '#00ff88']} blur={120} speed={20} />
+      <LiquidBlob colors={['#3b82f6', '#8b5cf6', '#22c55e']} blur={120} speed={20} />
       <HexGrid opacity={0.04} />
       <NoiseOverlay opacity={0.02} />
       <ScanLines opacity={0.04} />
@@ -260,7 +260,7 @@ function ConnectionPicker() {
       <div className="relative z-10 p-6 lg:p-8 max-w-4xl mx-auto">
         <motion.button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-white/40 hover:text-cyber-cyan mb-6 font-mono text-sm uppercase tracking-wider transition-colors"
+          className="flex items-center gap-2 text-white/40 hover:text-blue-500 mb-6 font-mono text-sm uppercase tracking-wider transition-colors"
           whileHover={{ x: -4 }}
         >
           <ArrowLeft className="w-4 h-4" />
@@ -270,7 +270,7 @@ function ConnectionPicker() {
         <h1 ref={titleRef} className="text-3xl lg:text-5xl font-black text-white uppercase tracking-tight mb-2">
           SELECT
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-green via-cyber-cyan to-cyber-purple">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-blue-500 to-violet-500">
             CONNECTION
           </span>
         </h1>
@@ -278,7 +278,7 @@ function ConnectionPicker() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-6 h-6 text-cyber-cyan animate-spin" />
+            <RefreshCw className="w-6 h-6 text-blue-500 animate-spin" />
           </div>
         ) : connections.length === 0 ? (
           <div className="text-center py-20">
@@ -297,14 +297,14 @@ function ConnectionPicker() {
               >
                 <button
                   onClick={() => navigate(`/monitor/${conn.id}`)}
-                  className="w-full text-left group p-5 border border-white/10 hover:border-cyber-cyan/50 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:bg-cyber-cyan/5"
+                  className="w-full text-left group p-5 border border-white/10 hover:border-blue-500/50 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:bg-blue-500/5"
                   style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <span className="text-2xl">{dbTypeIcon[conn.db_type.toLowerCase()] || '💾'}</span>
                       <div>
-                        <div className="font-mono font-bold text-white group-hover:text-cyber-cyan transition-colors">
+                        <div className="font-mono font-bold text-white group-hover:text-blue-500 transition-colors">
                           {conn.name}
                         </div>
                         <div className="font-mono text-xs text-white/40 mt-1">
@@ -314,7 +314,7 @@ function ConnectionPicker() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-white/30 group-hover:text-cyber-cyan transition-colors">
+                    <div className="flex items-center gap-2 text-white/30 group-hover:text-blue-500 transition-colors">
                       <BarChart3 className="w-5 h-5" />
                       <span className="font-mono text-xs uppercase">Monitor</span>
                     </div>
@@ -409,7 +409,7 @@ export function Monitor() {
   return (
     <div className="relative min-h-screen">
       {/* 背景 */}
-      <LiquidBlob colors={['#00fff2', '#bf00ff', '#00ff88']} blur={120} speed={20} />
+      <LiquidBlob colors={['#3b82f6', '#8b5cf6', '#22c55e']} blur={120} speed={20} />
       <HexGrid opacity={0.04} />
       <NoiseOverlay opacity={0.02} />
       <ScanLines opacity={0.04} />
@@ -421,7 +421,7 @@ export function Monitor() {
             <div>
               <motion.button
                 onClick={() => navigate(`/dashboard/${id}`)}
-                className="flex items-center gap-2 text-white/40 hover:text-cyber-cyan mb-3 font-mono text-sm uppercase tracking-wider transition-colors"
+                className="flex items-center gap-2 text-white/40 hover:text-blue-500 mb-3 font-mono text-sm uppercase tracking-wider transition-colors"
                 whileHover={{ x: -4 }}
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -430,7 +430,7 @@ export function Monitor() {
               <h1 ref={titleRef} className="text-3xl lg:text-5xl font-black text-white uppercase tracking-tight">
                 PERFORMANCE
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-green via-cyber-cyan to-cyber-purple">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-blue-500 to-violet-500">
                   MONITOR
                 </span>
               </h1>
@@ -443,7 +443,7 @@ export function Monitor() {
                   <StatusIndicator status={pool?.is_connected ? 'online' : 'offline'} />
                   <div className="text-right">
                     <div className="font-mono font-bold text-white text-sm">{overview.connection_name}</div>
-                    <div className="text-xs font-mono text-cyber-cyan">{overview.db_type.toUpperCase()}</div>
+                    <div className="text-xs font-mono text-blue-500">{overview.db_type.toUpperCase()}</div>
                   </div>
                 </div>
               )}
@@ -465,7 +465,7 @@ export function Monitor() {
           {/* 刷新指示条 */}
           {autoRefresh && (
             <motion.div
-              className="h-px bg-cyber-cyan/50 mt-4"
+              className="h-px bg-blue-500/50 mt-4"
               key={refreshCount}
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
@@ -477,14 +477,14 @@ export function Monitor() {
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <motion.div
-              className="w-16 h-16 border-2 border-cyber-cyan border-t-transparent"
+              className="w-16 h-16 border-2 border-blue-500 border-t-transparent"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
             />
           </div>
         ) : !overview ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-            <AlertTriangle className="w-12 h-12 text-cyber-red mb-4" />
+            <AlertTriangle className="w-12 h-12 text-red-500 mb-4" />
             <p className="font-mono text-white/50">NO DATA AVAILABLE</p>
             <p className="font-mono text-xs text-white/30 mt-2">Connection pool may not be established yet</p>
             <BrutalButton variant="ghost" size="sm" className="mt-4" onClick={fetchData}>
@@ -502,22 +502,22 @@ export function Monitor() {
               <DataPanel
                 label="ACTIVE CONNECTIONS"
                 value={stats?.active_connections || 0}
-                color="#00fff2"
+                color="#3b82f6"
               />
               <DataPanel
                 label="QUERIES / SEC"
                 value={Number((stats?.queries_per_second || 0).toFixed(1))}
-                color="#00ff88"
+                color="#22c55e"
               />
               <DataPanel
                 label="UPTIME"
                 value={formatUptime(stats?.uptime_seconds || 0)}
-                color="#bf00ff"
+                color="#8b5cf6"
               />
               <DataPanel
                 label="SLOW QUERIES"
                 value={stats?.slow_queries || 0}
-                color={stats?.slow_queries && stats.slow_queries > 0 ? '#ff0055' : '#00ff88'}
+                color={stats?.slow_queries && stats.slow_queries > 0 ? '#ef4444' : '#22c55e'}
               />
             </motion.div>
 
@@ -528,7 +528,7 @@ export function Monitor() {
                 <FloatingCard3D borderStyle="neon" depth={4}>
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-cyber-green" />
+                      <BarChart3 className="w-4 h-4 text-green-500" />
                       REALTIME METRICS
                     </h2>
                   </div>
@@ -536,13 +536,13 @@ export function Monitor() {
                     <CyberChart
                       data={qpsHistory}
                       label="Queries Per Second"
-                      color="#00ff88"
+                      color="#22c55e"
                       height={100}
                     />
                     <CyberChart
                       data={connHistory}
                       label="Active Connections"
-                      color="#00fff2"
+                      color="#3b82f6"
                       height={100}
                     />
                   </div>
@@ -554,7 +554,7 @@ export function Monitor() {
                 <FloatingCard3D borderStyle="brutal" depth={6} className="h-full">
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-cyber-purple" />
+                      <Layers className="w-4 h-4 text-violet-500" />
                       CONNECTION POOL
                     </h2>
                   </div>
@@ -564,18 +564,18 @@ export function Monitor() {
                         value={pool?.active || 0}
                         max={pool?.max_size || 1}
                         label="ACTIVE"
-                        color="#00fff2"
+                        color="#3b82f6"
                         size={110}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3 w-full">
                       <div className="p-3 bg-black/40 border border-white/10 text-center">
                         <div className="text-[10px] text-white/40 font-mono mb-1">IDLE</div>
-                        <div className="text-lg font-bold font-mono text-cyber-green">{pool?.idle || 0}</div>
+                        <div className="text-lg font-bold font-mono text-green-500">{pool?.idle || 0}</div>
                       </div>
                       <div className="p-3 bg-black/40 border border-white/10 text-center">
                         <div className="text-[10px] text-white/40 font-mono mb-1">MAX</div>
-                        <div className="text-lg font-bold font-mono text-cyber-purple">{pool?.max_size || 0}</div>
+                        <div className="text-lg font-bold font-mono text-violet-500">{pool?.max_size || 0}</div>
                       </div>
                     </div>
 
@@ -584,7 +584,7 @@ export function Monitor() {
                       {stats?.server_version && (
                         <div className="flex justify-between text-xs font-mono">
                           <span className="text-white/40">VERSION</span>
-                          <span className="text-cyber-cyan">{stats.server_version}</span>
+                          <span className="text-blue-500">{stats.server_version}</span>
                         </div>
                       )}
                       <div className="flex justify-between text-xs font-mono">
@@ -621,7 +621,7 @@ export function Monitor() {
               <FloatingCard3D borderStyle="brutal" depth={4}>
                 <div className="p-4 border-b border-white/10">
                   <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Database className="w-4 h-4 text-cyber-cyan" />
+                    <Database className="w-4 h-4 text-blue-500" />
                     DATABASES
                     <span className="text-xs text-white/30 ml-auto">{databases.length}</span>
                   </h2>
@@ -651,12 +651,12 @@ export function Monitor() {
                           >
                             <td className="p-3">
                               <div className="flex items-center gap-2">
-                                <HardDrive className="w-3 h-3 text-cyber-cyan/60" />
+                                <HardDrive className="w-3 h-3 text-blue-500/60" />
                                 <span className="font-mono text-sm text-white">{db.name}</span>
                               </div>
                             </td>
                             <td className="p-3 text-right font-mono text-sm text-white/70">{db.tables_count}</td>
-                            <td className="p-3 text-right font-mono text-sm text-cyber-green">{db.size_mb.toFixed(2)} MB</td>
+                            <td className="p-3 text-right font-mono text-sm text-green-500">{db.size_mb.toFixed(2)} MB</td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -669,7 +669,7 @@ export function Monitor() {
               <FloatingCard3D borderStyle="neon" depth={4}>
                 <div className="p-4 border-b border-white/10">
                   <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Cpu className="w-4 h-4 text-cyber-purple" />
+                    <Cpu className="w-4 h-4 text-violet-500" />
                     ACTIVE PROCESSES
                     <span className="text-xs text-white/30 ml-auto">{processes.length}</span>
                   </h2>
@@ -696,7 +696,7 @@ export function Monitor() {
                             key={proc.id}
                             className={cn(
                               'border-b border-white/5 hover:bg-white/5 transition-colors',
-                              proc.time > 60 && 'bg-cyber-red/5'
+                              proc.time > 60 && 'bg-red-500/5'
                             )}
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -707,16 +707,16 @@ export function Monitor() {
                             <td className="p-3">
                               <span className={cn(
                                 'font-mono text-xs px-1.5 py-0.5 border',
-                                proc.command === 'Query' ? 'border-cyber-green/30 text-cyber-green bg-cyber-green/10' :
+                                proc.command === 'Query' ? 'border-green-500/30 text-green-500 bg-green-500/10' :
                                 proc.command === 'Sleep' ? 'border-white/10 text-white/40' :
-                                'border-cyber-cyan/30 text-cyber-cyan'
+                                'border-blue-500/30 text-blue-500'
                               )}>
                                 {proc.command}
                               </span>
                             </td>
                             <td className={cn(
                               'p-3 text-right font-mono text-xs',
-                              proc.time > 60 ? 'text-cyber-red' : 'text-white/60'
+                              proc.time > 60 ? 'text-red-500' : 'text-white/60'
                             )}>
                               {proc.time}s
                             </td>

@@ -68,7 +68,7 @@ function ConnectionCard({
         'relative group cursor-pointer',
         'border-l-4 transition-all duration-300',
         isActive 
-          ? 'border-l-cyber-cyan bg-cyber-cyan/10' 
+          ? 'border-l-blue-500 bg-blue-500/10' 
           : 'border-l-white/20 hover:border-l-white/50 hover:bg-white/5'
       )}
       whileHover={{ x: 8 }}
@@ -81,7 +81,7 @@ function ConnectionCard({
               'w-10 h-10 flex items-center justify-center',
               'bg-black/50 border border-white/20'
             )}>
-              <Database className="w-5 h-5 text-cyber-cyan" />
+              <Database className="w-5 h-5 text-blue-500" />
             </div>
             <div>
               <h3 className="font-mono font-bold text-white uppercase tracking-wide">
@@ -94,14 +94,14 @@ function ConnectionCard({
           </div>
           <ChevronRight className={cn(
             'w-5 h-5 transition-all',
-            isActive ? 'text-cyber-cyan' : 'text-white/30 group-hover:text-white/50'
+            isActive ? 'text-blue-500' : 'text-white/30 group-hover:text-white/50'
           )} />
         </div>
       </div>
 
       {/* 底部线条动画 */}
       <motion.div 
-        className="absolute bottom-0 left-0 h-px bg-cyber-cyan"
+        className="absolute bottom-0 left-0 h-px bg-blue-500"
         initial={{ width: 0 }}
         animate={{ width: isActive ? '100%' : 0 }}
         transition={{ duration: 0.3 }}
@@ -196,7 +196,7 @@ export function DashboardBold() {
   return (
     <div className="relative min-h-screen">
       {/* 背景效果层 */}
-      <LiquidBlob colors={['#00fff2', '#bf00ff', '#ff00aa']} blur={100} />
+      <LiquidBlob colors={['#3b82f6', '#8b5cf6', '#6366f1']} blur={100} />
       <HexGrid opacity={0.05} />
       <NoiseOverlay opacity={0.02} />
       <ScanLines opacity={0.05} />
@@ -208,7 +208,7 @@ export function DashboardBold() {
           <div className="flex items-center justify-between">
             <div>
               <motion.p 
-                className="text-xs font-mono text-cyber-cyan uppercase tracking-[0.3em] mb-2"
+                className="text-xs font-mono text-blue-500 uppercase tracking-[0.3em] mb-2"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
               >
@@ -221,7 +221,7 @@ export function DashboardBold() {
               >
                 CONTROL
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-pink">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500">
                   CENTER
                 </span>
               </h1>
@@ -251,25 +251,25 @@ export function DashboardBold() {
           <DataPanel 
             label="SYSTEM STATUS" 
             value={health?.status === 'healthy' ? 'ONLINE' : 'DEGRADED'}
-            color={health?.status === 'healthy' ? '#00ff88' : '#ffaa00'}
+            color={health?.status === 'healthy' ? '#22c55e' : '#f59e0b'}
           />
           <DataPanel 
             label="ACTIVE SERVICES" 
             value={`${healthyServices}/${totalServices}`}
-            color="#00fff2"
+            color="#3b82f6"
           />
           <DataPanel 
             label="CONNECTIONS" 
             value={connections.length}
             trend="stable"
-            color="#bf00ff"
+            color="#8b5cf6"
           />
           <DataPanel 
             label="UPTIME" 
             value="99.9"
             unit="%"
             trend="up"
-            color="#ff00aa"
+            color="#ec4899"
           />
         </motion.div>
 
@@ -283,7 +283,7 @@ export function DashboardBold() {
             <FloatingCard3D borderStyle="brutal" className="h-full">
               <div className="p-4 border-b border-white/10">
                 <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Terminal className="w-4 h-4 text-cyber-cyan" />
+                  <Terminal className="w-4 h-4 text-blue-500" />
                   CONNECTIONS
                 </h2>
               </div>
@@ -292,7 +292,7 @@ export function DashboardBold() {
                 {loading ? (
                   <div className="p-8 text-center">
                     <motion.div
-                      className="w-8 h-8 border-2 border-cyber-cyan border-t-transparent mx-auto"
+                      className="w-8 h-8 border-2 border-blue-500 border-t-transparent mx-auto"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     />
@@ -354,7 +354,7 @@ export function DashboardBold() {
                           <h2 className="text-2xl font-black text-white uppercase tracking-tight">
                             {selectedConnection.name}
                           </h2>
-                          <p className="text-sm font-mono text-cyber-cyan mt-1">
+                          <p className="text-sm font-mono text-blue-500 mt-1">
                             {selectedConnection.db_type.toUpperCase()}
                           </p>
                         </div>
@@ -475,7 +475,7 @@ export function DashboardBold() {
                       <h2 className="text-lg font-black text-white uppercase tracking-tight">
                         {selectedConnection.name}
                       </h2>
-                      <p className="text-xs font-mono text-cyber-cyan mt-0.5">
+                      <p className="text-xs font-mono text-blue-500 mt-0.5">
                         {selectedConnection.db_type.toUpperCase()}
                       </p>
                     </div>
@@ -533,7 +533,7 @@ export function DashboardBold() {
         {isMobile && (
           <motion.button
             onClick={() => navigate('/add')}
-            className="fixed right-6 bottom-24 z-40 w-14 h-14 bg-cyber-cyan text-black flex items-center justify-center shadow-[0_0_20px_rgba(0,255,242,0.5)]"
+            className="fixed right-6 bottom-24 z-40 w-14 h-14 bg-blue-500 text-white flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.3)]"
             style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

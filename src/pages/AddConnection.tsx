@@ -131,7 +131,7 @@ export function AddConnection() {
   return (
     <div className="relative min-h-screen">
       {/* 背景 */}
-      <LiquidBlob colors={['#bf00ff', '#00fff2', '#ff00aa']} blur={120} speed={25} />
+      <LiquidBlob colors={['#8b5cf6', '#3b82f6', '#6366f1']} blur={120} speed={25} />
       <HexGrid opacity={0.04} />
       <NoiseOverlay opacity={0.02} />
       <ScanLines opacity={0.04} />
@@ -143,7 +143,7 @@ export function AddConnection() {
             <div>
               <motion.button
                 onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-2 text-white/40 hover:text-cyber-cyan mb-3 font-mono text-sm uppercase tracking-wider transition-colors"
+                className="flex items-center gap-2 text-white/40 hover:text-blue-500 mb-3 font-mono text-sm uppercase tracking-wider transition-colors"
                 whileHover={{ x: -4 }}
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -155,7 +155,7 @@ export function AddConnection() {
               >
                 NEW
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple via-cyber-cyan to-cyber-green">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-blue-500 to-green-500">
                   CONNECTION
                 </span>
               </h1>
@@ -169,10 +169,10 @@ export function AddConnection() {
                     className={cn(
                       'flex items-center gap-2 px-4 py-2 border font-mono text-xs uppercase',
                       step >= s.id
-                        ? 'border-cyber-cyan bg-cyber-cyan/10 text-cyber-cyan'
+                        ? 'border-blue-500 bg-blue-500/10 text-blue-500'
                         : 'border-white/10 text-white/30'
                     )}
-                    animate={step === s.id ? { boxShadow: '0 0 15px rgba(0,255,242,0.3)' } : {}}
+                    animate={step === s.id ? { boxShadow: '0 0 15px rgba(59,130,246,0.3)' } : {}}
                   >
                     <span className="font-bold">{String(s.id).padStart(2, '0')}</span>
                     <span>{s.label}</span>
@@ -194,7 +194,7 @@ export function AddConnection() {
             <FloatingCard3D borderStyle="brutal" depth={8} className="h-full">
               <div className="p-4 border-b border-white/10">
                 <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Database className="w-4 h-4 text-cyber-cyan" />
+                  <Database className="w-4 h-4 text-blue-500" />
                   DATABASE ENGINE
                 </h2>
               </div>
@@ -207,7 +207,7 @@ export function AddConnection() {
                     className={cn(
                       'relative p-3 text-left transition-all border',
                       formData.db_type === type.value
-                        ? 'border-cyber-cyan bg-cyber-cyan/10'
+                        ? 'border-blue-500 bg-blue-500/10'
                         : 'border-white/10 bg-black/30 hover:border-white/30'
                     )}
                     whileHover={{ scale: 1.02 }}
@@ -226,9 +226,9 @@ export function AddConnection() {
                     )}
                     {formData.db_type === type.value && (
                       <motion.div
-                        className="absolute top-1 right-1 w-2 h-2 bg-cyber-cyan"
+                        className="absolute top-1 right-1 w-2 h-2 bg-blue-500"
                         layoutId="dbSelector"
-                        animate={{ boxShadow: '0 0 8px #00fff2' }}
+                        animate={{ boxShadow: '0 0 8px rgba(59,130,246,0.6)' }}
                       />
                     )}
                   </motion.button>
@@ -250,7 +250,7 @@ export function AddConnection() {
                   <FloatingCard3D borderStyle="neon" depth={6}>
                     <div className="p-4 border-b border-white/10 flex items-center justify-between">
                       <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-cyber-purple" />
+                        <Zap className="w-4 h-4 text-violet-500" />
                         CONNECTION CONFIG
                       </h2>
                       <div className="flex items-center gap-2 text-xs font-mono text-white/40">
@@ -264,7 +264,7 @@ export function AddConnection() {
                       <div>
                         <label className="flex items-center gap-2 text-xs font-mono text-white/50 uppercase tracking-wider mb-2">
                           <Server className="w-3 h-3" /> CONNECTION NAME
-                          <span className="text-cyber-pink">*</span>
+                          <span className="text-pink-500">*</span>
                         </label>
                         <TerminalField
                           value={formData.name}
@@ -277,7 +277,7 @@ export function AddConnection() {
                         <div>
                           <label className="flex items-center gap-2 text-xs font-mono text-white/50 uppercase tracking-wider mb-2">
                             <HardDrive className="w-3 h-3" /> FILE PATH
-                            <span className="text-cyber-pink">*</span>
+                            <span className="text-pink-500">*</span>
                           </label>
                           <TerminalField
                             value={formData.file_path || ''}
@@ -292,7 +292,7 @@ export function AddConnection() {
                             <div className="col-span-2">
                               <label className="flex items-center gap-2 text-xs font-mono text-white/50 uppercase tracking-wider mb-2">
                                 <Globe className="w-3 h-3" /> HOST
-                                <span className="text-cyber-pink">*</span>
+                                <span className="text-pink-500">*</span>
                               </label>
                               <TerminalField
                                 value={formData.host || ''}
@@ -388,17 +388,17 @@ export function AddConnection() {
                     <DataPanel
                       label="ENGINE"
                       value={selectedType?.label || '—'}
-                      color={selectedType?.color || '#00fff2'}
+                      color={selectedType?.color || '#3b82f6'}
                     />
                     <DataPanel
                       label="PROTOCOL"
                       value={isFileBasedDb ? 'FILE' : 'TCP/IP'}
-                      color="#bf00ff"
+                      color="#8b5cf6"
                     />
                     <DataPanel
                       label="PORT"
                       value={isFileBasedDb ? '—' : String(formData.port || '—')}
-                      color="#00ff88"
+                      color="#22c55e"
                     />
                   </motion.div>
                 </motion.div>
@@ -413,7 +413,7 @@ export function AddConnection() {
                   <FloatingCard3D borderStyle="neon" depth={6}>
                     <div className="p-4 border-b border-white/10">
                       <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-cyber-green" />
+                        <Zap className="w-4 h-4 text-green-500" />
                         CONNECTION VERIFICATION
                       </h2>
                     </div>
@@ -437,9 +437,9 @@ export function AddConnection() {
                           <div className="p-3 bg-black/40 border border-white/10">
                             <div className="text-[10px] text-white/40 mb-1">STATUS</div>
                             <div className={cn(
-                              testStatus === 'success' && 'text-cyber-green',
-                              testStatus === 'error' && 'text-cyber-red',
-                              testStatus === 'testing' && 'text-cyber-cyan',
+                              testStatus === 'success' && 'text-green-500',
+                              testStatus === 'error' && 'text-red-500',
+                              testStatus === 'testing' && 'text-blue-500',
                               testStatus === 'idle' && 'text-white/50',
                             )}>
                               {testStatus === 'success' && 'CONNECTED'}
@@ -471,11 +471,11 @@ export function AddConnection() {
                             className="mb-6"
                           >
                             <motion.div
-                              className="w-20 h-20 border-2 border-cyber-cyan flex items-center justify-center"
+                              className="w-20 h-20 border-2 border-blue-500 flex items-center justify-center"
                               animate={{ rotate: 360 }}
                               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                             >
-                              <Loader2 className="w-8 h-8 text-cyber-cyan" />
+                              <Loader2 className="w-8 h-8 text-blue-500" />
                             </motion.div>
                           </motion.div>
                         )}
@@ -485,8 +485,8 @@ export function AddConnection() {
                             initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                             className="mb-6"
                           >
-                            <div className="w-20 h-20 border-2 border-cyber-green bg-cyber-green/10 flex items-center justify-center">
-                              <CheckCircle2 className="w-10 h-10 text-cyber-green" />
+                            <div className="w-20 h-20 border-2 border-green-500 bg-green-500/10 flex items-center justify-center">
+                              <CheckCircle2 className="w-10 h-10 text-green-500" />
                             </div>
                           </motion.div>
                         )}
@@ -496,10 +496,10 @@ export function AddConnection() {
                             initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                             className="mb-6"
                           >
-                            <div className="w-20 h-20 border-2 border-cyber-red bg-cyber-red/10 flex items-center justify-center">
-                              <AlertTriangle className="w-10 h-10 text-cyber-red" />
+                            <div className="w-20 h-20 border-2 border-red-500 bg-red-500/10 flex items-center justify-center">
+                              <AlertTriangle className="w-10 h-10 text-red-500" />
                             </div>
-                            <p className="text-xs text-cyber-red font-mono mt-3 max-w-sm text-center break-all">
+                            <p className="text-xs text-red-500 font-mono mt-3 max-w-sm text-center break-all">
                               {testError}
                             </p>
                           </motion.div>
@@ -539,8 +539,8 @@ function TerminalField({
   type?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-4 py-3 font-mono focus-within:border-cyber-cyan/50 transition-colors">
-      <span className="text-cyber-cyan text-sm">{'>'}</span>
+    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-4 py-3 font-mono focus-within:border-blue-500/50 transition-colors">
+      <span className="text-blue-500 text-sm">{'>'}</span>
       <input
         type={type}
         value={value}
@@ -549,7 +549,7 @@ function TerminalField({
         className="flex-1 bg-transparent text-white outline-none placeholder-white/20 text-sm"
       />
       <motion.span
-        className="w-1.5 h-4 bg-cyber-cyan/60"
+        className="w-1.5 h-4 bg-blue-500/60"
         animate={{ opacity: [1, 0, 1] }}
         transition={{ duration: 1, repeat: Infinity }}
       />

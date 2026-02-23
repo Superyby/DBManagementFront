@@ -56,7 +56,7 @@ export function ImmersiveLayout() {
                 className={cn(
                   'relative flex items-center gap-2 px-4 py-2.5 text-[11px] font-mono font-semibold uppercase tracking-wider transition-all duration-200',
                   isActive
-                    ? 'text-cyber-cyan'
+                    ? 'text-blue-500'
                     : 'text-white/40 hover:text-white/80'
                 )}
                 whileHover={{ y: -2 }}
@@ -69,8 +69,8 @@ export function ImmersiveLayout() {
                 {isActive && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-2 left-2 right-2 h-[2px] bg-cyber-cyan"
-                    style={{ boxShadow: '0 0 8px #00fff2, 0 0 16px #00fff280' }}
+                    className="absolute -bottom-2 left-2 right-2 h-[2px] bg-blue-500"
+                    style={{ boxShadow: '0 0 8px rgba(59,130,246,0.6), 0 0 16px rgba(59,130,246,0.3)' }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}

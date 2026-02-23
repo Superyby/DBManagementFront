@@ -8,18 +8,18 @@ export default {
     extend: {
       colors: {
         cyber: {
-          bg: '#0a0a0f',
-          surface: '#12121a',
-          'surface-light': '#1a1a25',
-          border: '#1e1e2e',
-          cyan: '#00fff2',
-          purple: '#bf00ff',
-          pink: '#ff00aa',
-          green: '#00ff88',
-          red: '#ff0055',
-          orange: '#ff8800',
-          text: '#e4e4e7',
-          muted: '#71717a',
+          bg: '#09090b',
+          surface: '#18181b',
+          'surface-light': '#27272a',
+          border: '#3f3f46',
+          cyan: '#3b82f6',
+          purple: '#8b5cf6',
+          pink: '#ec4899',
+          green: '#22c55e',
+          red: '#ef4444',
+          orange: '#f59e0b',
+          text: '#fafafa',
+          muted: '#a1a1aa',
         },
       },
       fontFamily: {
@@ -27,13 +27,13 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'neon-cyan': '0 0 5px #00fff2, 0 0 20px #00fff2, 0 0 40px #00fff2',
-        'neon-purple': '0 0 5px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff',
-        'neon-pink': '0 0 5px #ff00aa, 0 0 20px #ff00aa, 0 0 40px #ff00aa',
-        'neon-green': '0 0 5px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88',
-        'glow-sm': '0 0 10px rgba(0, 255, 242, 0.3)',
-        'glow-md': '0 0 20px rgba(0, 255, 242, 0.4)',
-        'glow-lg': '0 0 40px rgba(0, 255, 242, 0.5)',
+        'neon-cyan': '0 0 10px rgba(59,130,246,0.2), 0 0 20px rgba(59,130,246,0.1)',
+        'neon-purple': '0 0 10px rgba(139,92,246,0.2), 0 0 20px rgba(139,92,246,0.1)',
+        'neon-pink': '0 0 10px rgba(236,72,153,0.2), 0 0 20px rgba(236,72,153,0.1)',
+        'neon-green': '0 0 10px rgba(34,197,94,0.2), 0 0 20px rgba(34,197,94,0.1)',
+        'glow-sm': '0 0 10px rgba(59,130,246,0.15)',
+        'glow-md': '0 0 20px rgba(59,130,246,0.2)',
+        'glow-lg': '0 0 40px rgba(59,130,246,0.25)',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -45,8 +45,8 @@ export default {
       },
       keyframes: {
         glow: {
-          '0%': { boxShadow: '0 0 5px #00fff2, 0 0 10px #00fff2' },
-          '100%': { boxShadow: '0 0 10px #00fff2, 0 0 20px #00fff2, 0 0 30px #00fff2' },
+          '0%': { boxShadow: '0 0 5px rgba(59,130,246,0.2)' },
+          '100%': { boxShadow: '0 0 15px rgba(59,130,246,0.3)' },
         },
         scan: {
           '0%': { transform: 'translateY(-100%)' },
@@ -71,10 +71,10 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'cyber-grid': `
-          linear-gradient(rgba(0, 255, 242, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 255, 242, 0.03) 1px, transparent 1px)
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
         `,
-        'neon-gradient': 'linear-gradient(135deg, #00fff2, #bf00ff, #ff00aa)',
+        'neon-gradient': 'linear-gradient(135deg, #3b82f6, #8b5cf6, #6366f1)',
       },
     },
   },

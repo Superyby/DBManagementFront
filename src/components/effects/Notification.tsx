@@ -36,10 +36,10 @@ const NotificationContext = createContext<NotificationContextType | null>(null);
 
 // 图标配置
 const iconConfig = {
-  success: { icon: CheckCircle2, color: 'text-cyber-green', bg: 'bg-cyber-green/10', border: 'border-cyber-green/30' },
+  success: { icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/30' },
   error: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/30' },
-  warning: { icon: AlertTriangle, color: 'text-cyber-orange', bg: 'bg-cyber-orange/10', border: 'border-cyber-orange/30' },
-  info: { icon: Info, color: 'text-cyber-cyan', bg: 'bg-cyber-cyan/10', border: 'border-cyber-cyan/30' },
+  warning: { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+  info: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
 };
 
 // 单个通知项组件
@@ -144,7 +144,7 @@ function NotificationItem({
       ref={itemRef}
       className={cn(
         'relative w-80 overflow-hidden rounded-lg border backdrop-blur-xl',
-        'bg-cyber-surface/95 shadow-2xl',
+        'bg-zinc-900/95 shadow-2xl',
         config.border
       )}
       style={{ perspective: '1000px' }}
@@ -154,16 +154,16 @@ function NotificationItem({
         ref={glowRef}
         className={cn(
           'absolute inset-0 opacity-30 pointer-events-none',
-          type === 'success' && 'bg-gradient-to-br from-cyber-green/20 to-transparent',
+          type === 'success' && 'bg-gradient-to-br from-green-500/20 to-transparent',
           type === 'error' && 'bg-gradient-to-br from-red-500/20 to-transparent',
-          type === 'warning' && 'bg-gradient-to-br from-cyber-orange/20 to-transparent',
-          type === 'info' && 'bg-gradient-to-br from-cyber-cyan/20 to-transparent'
+          type === 'warning' && 'bg-gradient-to-br from-amber-500/20 to-transparent',
+          type === 'info' && 'bg-gradient-to-br from-blue-500/20 to-transparent'
         )}
       />
 
       {/* 扫描线效果 */}
       <motion.div
-        className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyber-cyan to-transparent pointer-events-none"
+        className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent pointer-events-none"
         initial={{ top: 0, opacity: 0 }}
         animate={{ top: '100%', opacity: [0, 1, 0] }}
         transition={{ duration: 1.5, ease: 'linear' }}
@@ -178,16 +178,16 @@ function NotificationItem({
 
           {/* 内容 */}
           <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-cyber-text text-sm">{title}</h4>
+            <h4 className="font-semibold text-zinc-50 text-sm">{title}</h4>
             {message && (
-              <p className="text-cyber-muted text-xs mt-1 line-clamp-2">{message}</p>
+              <p className="text-zinc-400 text-xs mt-1 line-clamp-2">{message}</p>
             )}
           </div>
 
           {/* 关闭按钮 */}
           <button
             onClick={handleDismiss}
-            className="p-1 rounded-lg text-cyber-muted hover:text-cyber-text hover:bg-cyber-border/50 transition-colors"
+            className="p-1 rounded-lg text-zinc-400 hover:text-zinc-50 hover:bg-zinc-700/50 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -196,15 +196,15 @@ function NotificationItem({
 
       {/* 进度条 */}
       {progress && (
-        <div className="h-0.5 bg-cyber-border/30">
+        <div className="h-0.5 bg-zinc-700/30">
           <div
             ref={progressRef}
             className={cn(
               'h-full origin-left',
-              type === 'success' && 'bg-cyber-green',
+              type === 'success' && 'bg-green-500',
               type === 'error' && 'bg-red-500',
-              type === 'warning' && 'bg-cyber-orange',
-              type === 'info' && 'bg-cyber-cyan'
+              type === 'warning' && 'bg-amber-500',
+              type === 'info' && 'bg-blue-500'
             )}
           />
         </div>
