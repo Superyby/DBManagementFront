@@ -172,6 +172,8 @@ export function Monitor() {
   const [qpsHistory, setQpsHistory] = useState<number[]>([]);
   const [connHistory, setConnHistory] = useState<number[]>([]);
 
+  const loadingRef = useRef(true);
+
   const fetchData = useCallback(async () => {
     if (!id) return;
     try {
@@ -188,11 +190,12 @@ export function Monitor() {
       setDatabases(dbRes.data || []);
       setProcesses(procRes.data || []);
     } catch (err: any) {
-      if (loading) notifyError('Monitor Error', err?.parsedMessage || err?.message || 'Failed');
+      if (loadingRef.current) notifyError('Monitor Error', err?.parsedMessage || err?.message || 'Failed');
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
-  }, [id, loading]);
+  }, [id]);
 
   useEffect(() => { fetchData(); }, [id]);
 

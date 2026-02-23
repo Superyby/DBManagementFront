@@ -65,12 +65,19 @@ export function DashboardBold() {
   const [health, setHealth] = useState<AggregatedHealth | null>(null);
   const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([
-      getConnections().then(r => setConnections(r.data || [])),
-      getAggregatedHealth().then(r => setHealth(r.data)).catch(() => null),
-    ]).finally(() => setLoading(false));
+    // Load connections first (fast) — don't block on health check
+    getConnections()
+      .then(r => { setConnections(r.data || []); setLoadError(null); })
+      .catch((err) => { setLoadError(err?.parsedMessage || 'Failed to load connections'); })
+      .finally(() => setLoading(false));
+
+    // Health check loads independently in the background
+    getAggregatedHealth()
+      .then(r => setHealth(r.data))
+      .catch(() => null);
   }, []);
 
   useEffect(() => {
@@ -158,6 +165,20 @@ export function DashboardBold() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                   />
+                </div>
+              ) : loadError ? (
+                <div className="p-8 text-center">
+                  <p className="text-sm text-red-500 mb-2">{loadError}</p>
+                  <Button variant="ghost" size="sm" onClick={() => {
+                    setLoading(true);
+                    setLoadError(null);
+                    getConnections()
+                      .then(r => { setConnections(r.data || []); setLoadError(null); })
+                      .catch((err) => { setLoadError(err?.parsedMessage || 'Failed to load'); })
+                      .finally(() => setLoading(false));
+                  }}>
+                    Retry
+                  </Button>
                 </div>
               ) : connections.length === 0 ? (
                 <div className="p-8 text-center text-[var(--text-m)] text-sm">

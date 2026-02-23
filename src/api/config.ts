@@ -4,7 +4,7 @@ export const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   
   // 超时时间
-  timeout: 30000,
+  timeout: 10000,
   
   // 后端服务端口
   gatewayPort: 8080,
