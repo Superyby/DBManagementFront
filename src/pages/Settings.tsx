@@ -26,10 +26,10 @@ const SUPPORTED_DBS = [
 
 // 后端服务
 const SERVICES = [
-  { name: 'GATEWAY', port: 8080, color: '#00fff2' },
-  { name: 'CONNECTION', port: 8081, color: '#00ff88' },
-  { name: 'QUERY', port: 8082, color: '#bf00ff' },
-  { name: 'AI SERVICE', port: 8083, color: '#ff00aa' },
+  { name: 'GATEWAY', port: 8080, color: '#3b82f6' },
+  { name: 'CONNECTION', port: 8081, color: '#22c55e' },
+  { name: 'QUERY', port: 8082, color: '#8b5cf6' },
+  { name: 'AI SERVICE', port: 8083, color: '#ec4899' },
 ];
 
 export function Settings() {
@@ -50,7 +50,7 @@ export function Settings() {
   return (
     <div className="relative min-h-screen">
       {/* 背景效果 */}
-      <LiquidBlob colors={['#bf00ff', '#00fff2', '#ff00aa']} blur={120} speed={25} />
+      <LiquidBlob colors={['#8b5cf6', '#3b82f6', '#ec4899']} blur={120} speed={25} />
       <HexGrid opacity={0.04} />
       <NoiseOverlay opacity={0.02} />
       <ScanLines opacity={0.04} />
@@ -59,7 +59,7 @@ export function Settings() {
         {/* 头部 */}
         <header className="mb-8">
           <motion.p
-            className="text-xs font-mono text-cyber-cyan uppercase tracking-[0.3em] mb-2"
+            className="text-xs font-mono text-blue-500 uppercase tracking-[0.3em] mb-2"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -71,7 +71,7 @@ export function Settings() {
           >
             SETTINGS
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple via-cyber-cyan to-cyber-pink">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-blue-500 to-pink-500">
               PANEL
             </span>
           </h1>
@@ -84,10 +84,10 @@ export function Settings() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <DataPanel label="VERSION" value="v1.0.0" color="#00fff2" />
-          <DataPanel label="THEME" value={isDark ? 'DARK' : 'LIGHT'} color="#bf00ff" />
-          <DataPanel label="DATABASES" value={SUPPORTED_DBS.length} color="#00ff88" />
-          <DataPanel label="SERVICES" value={SERVICES.length} color="#ff00aa" />
+          <DataPanel label="VERSION" value="v1.0.0" color="#3b82f6" />
+          <DataPanel label="THEME" value={isDark ? 'DARK' : 'LIGHT'} color="#8b5cf6" />
+          <DataPanel label="DATABASES" value={SUPPORTED_DBS.length} color="#22c55e" />
+          <DataPanel label="SERVICES" value={SERVICES.length} color="#ec4899" />
         </motion.div>
 
         {/* 主内容区 */}
@@ -98,7 +98,7 @@ export function Settings() {
             <FloatingCard3D borderStyle="brutal" depth={6}>
               <div className="p-4 border-b border-white/10">
                 <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-cyber-cyan" />
+                  <Cpu className="w-4 h-4 text-blue-500" />
                   SECTIONS
                 </h2>
               </div>
@@ -119,14 +119,14 @@ export function Settings() {
                         'w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200',
                         'border-l-4',
                         isActive
-                          ? 'border-l-cyber-cyan bg-cyber-cyan/10 text-cyber-cyan'
+                          ? 'border-l-blue-500 bg-blue-500/10 text-blue-500'
                           : 'border-l-transparent text-white/50 hover:text-white hover:bg-white/5'
                       )}
                       whileHover={{ x: 4 }}
                     >
                       <Icon className="w-4 h-4" />
                       <span className="font-mono text-xs font-bold uppercase tracking-wider">{section.label}</span>
-                      <ChevronRight className={cn('w-3 h-3 ml-auto transition-transform', isActive && 'text-cyber-cyan')} />
+                      <ChevronRight className={cn('w-3 h-3 ml-auto transition-transform', isActive && 'text-blue-500')} />
                     </motion.button>
                   );
                 })}
@@ -147,7 +147,7 @@ export function Settings() {
                 <FloatingCard3D borderStyle="neon" depth={6}>
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Palette className="w-4 h-4 text-cyber-purple" />
+                      <Palette className="w-4 h-4 text-violet-500" />
                       APPEARANCE
                     </h2>
                   </div>
@@ -157,9 +157,9 @@ export function Settings() {
                       <div className="flex items-center gap-4">
                         <div className={cn(
                           'w-12 h-12 flex items-center justify-center border',
-                          isDark ? 'border-cyber-purple/50 bg-cyber-purple/10' : 'border-cyber-cyan/50 bg-cyber-cyan/10'
+                          isDark ? 'border-violet-500/50 bg-violet-500/10' : 'border-blue-500/50 bg-blue-500/10'
                         )}>
-                          {isDark ? <Moon className="w-6 h-6 text-cyber-purple" /> : <Sun className="w-6 h-6 text-cyber-cyan" />}
+                          {isDark ? <Moon className="w-6 h-6 text-violet-500" /> : <Sun className="w-6 h-6 text-blue-500" />}
                         </div>
                         <div>
                           <div className="font-mono font-bold text-white uppercase tracking-wide text-sm">
@@ -183,15 +183,15 @@ export function Settings() {
                     {/* UI 风格信息 */}
                     <div className="p-5 bg-black/40 border border-white/10">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 flex items-center justify-center border border-cyber-pink/50 bg-cyber-pink/10">
-                          <Zap className="w-6 h-6 text-cyber-pink" />
+                        <div className="w-12 h-12 flex items-center justify-center border border-pink-500/50 bg-pink-500/10">
+                          <Zap className="w-6 h-6 text-pink-500" />
                         </div>
                         <div>
                           <div className="font-mono font-bold text-white uppercase tracking-wide text-sm">
                             UI STYLE
                           </div>
-                          <div className="text-xs font-mono text-cyber-cyan mt-1">
-                            INDUSTRIAL CYBERPUNK / BRUTALIST SCI-FI
+                          <div className="text-xs font-mono text-blue-500 mt-1">
+                            MODERN MINIMAL / INDUSTRIAL SCI-FI
                           </div>
                         </div>
                       </div>
@@ -212,7 +212,7 @@ export function Settings() {
                 <FloatingCard3D borderStyle="neon" depth={6}>
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Server className="w-4 h-4 text-cyber-green" />
+                      <Server className="w-4 h-4 text-green-500" />
                       BACKEND SERVICES
                     </h2>
                   </div>
@@ -264,7 +264,7 @@ export function Settings() {
                 <FloatingCard3D borderStyle="neon" depth={6}>
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Database className="w-4 h-4 text-cyber-purple" />
+                      <Database className="w-4 h-4 text-violet-500" />
                       SUPPORTED DATABASES
                     </h2>
                   </div>
@@ -300,18 +300,18 @@ export function Settings() {
                 <FloatingCard3D borderStyle="neon" depth={6}>
                   <div className="p-4 border-b border-white/10">
                     <h2 className="font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Info className="w-4 h-4 text-cyber-pink" />
+                      <Info className="w-4 h-4 text-pink-500" />
                       ABOUT
                     </h2>
                   </div>
                   <div className="p-6 space-y-4">
                     {/* 信息行 */}
                     {[
-                      { label: 'VERSION', value: 'v1.0.0', color: '#00fff2' },
-                      { label: 'FRONTEND', value: 'React + Tailwind + Framer Motion', color: '#bf00ff' },
-                      { label: 'BACKEND', value: 'Rust + Axum', color: '#ff00aa' },
-                      { label: 'DATABASE', value: 'MySQL 8.0 (metadata)', color: '#00ff88' },
-                      { label: 'UI STYLE', value: 'Cyberpunk / Industrial Sci-Fi', color: '#00fff2' },
+                      { label: 'VERSION', value: 'v1.0.0', color: '#3b82f6' },
+                      { label: 'FRONTEND', value: 'React + Tailwind + Framer Motion', color: '#8b5cf6' },
+                      { label: 'BACKEND', value: 'Rust + Axum', color: '#ec4899' },
+                      { label: 'DATABASE', value: 'MySQL 8.0 (metadata)', color: '#22c55e' },
+                      { label: 'UI STYLE', value: 'Modern Minimal / Industrial Sci-Fi', color: '#3b82f6' },
                     ].map((item) => (
                       <div
                         key={item.label}
@@ -327,12 +327,12 @@ export function Settings() {
                     {/* 页脚 */}
                     <div className="pt-4 border-t border-white/10 text-center">
                       <p className="flex items-center justify-center gap-2 text-xs font-mono text-white/40">
-                        MADE WITH <Heart className="w-3 h-3 text-cyber-pink" /> USING
+                        MADE WITH <Heart className="w-3 h-3 text-pink-500" /> USING
                         <a
                           href="https://github.com"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-cyber-cyan hover:text-cyber-cyan/80 transition-colors"
+                          className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-400 transition-colors"
                         >
                           <Github className="w-3 h-3" />
                           OPEN SOURCE
