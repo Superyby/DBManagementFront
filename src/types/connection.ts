@@ -173,3 +173,90 @@ export interface MonitorOverview {
   pool: ConnectionPoolStats;
   timestamp: string;
 }
+
+// ===================== AI 服务相关类型 =====================
+
+// 自然语言查询请求
+export interface NaturalQueryRequest {
+  request_id: string;
+  question: string;
+  connection_id: string;
+  context?: ConversationContext;
+}
+
+export interface ConversationContext {
+  session_id: string;
+  history: ChatMessage[];
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+// 自然语言查询响应
+export interface NaturalQueryResponse {
+  request_id: string;
+  trace_id: string;
+  status: 'ready' | 'need_clarification' | 'failed';
+  sql?: string;
+  explanation?: string;
+  confidence?: number;
+  references: SqlReference[];
+  clarification?: ClarificationQuestion;
+  lineage_summary?: LineageSummary;
+}
+
+export interface SqlReference {
+  type: string;
+  id: string;
+  description?: string;
+}
+
+export interface ClarificationQuestion {
+  question_id: string;
+  question: string;
+  dimension: string;
+  options: ClarificationOption[];
+  default_value?: string;
+}
+
+export interface ClarificationOption {
+  value: string;
+  label: string;
+}
+
+export interface LineageSummary {
+  source_tables: string[];
+  key_columns: string[];
+  applied_rules: string[];
+}
+
+// SQL 校验
+export interface ValidateSqlRequest {
+  sql: string;
+  connection_id: string;
+  run_explain?: boolean;
+}
+
+export interface ValidateSqlResponse {
+  valid: boolean;
+  errors: { code: string; message: string }[];
+  warnings: string[];
+  risk_level?: string;
+}
+
+// SQL 执行结果
+export interface QueryResult {
+  columns: ColumnInfo[];
+  rows: any[][];
+  row_count: number;
+  affected_rows?: number;
+  execution_time_ms: number;
+}
+
+export interface ColumnInfo {
+  name: string;
+  data_type: string;
+  nullable?: boolean;
+}

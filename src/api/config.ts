@@ -5,6 +5,9 @@ export const API_CONFIG = {
   
   // 超时时间
   timeout: 10000,
+
+  // AI 服务超时时间（LLM 调用较慢）
+  aiTimeout: 60000,
   
   // 后端服务端口
   gatewayPort: 8080,

@@ -1,5 +1,5 @@
 import { get, post, del } from '../request';
-import { API_ENDPOINTS } from '../config';
+import { API_ENDPOINTS, API_CONFIG } from '../config';
 import type {
   ConnectionItem,
   CreateConnectionRequest,
@@ -9,6 +9,7 @@ import type {
   MonitorOverview,
   DatabaseInfo,
   ProcessInfo,
+  QueryResult,
 } from '../../types/connection';
 
 // 获取所有连接列表
@@ -61,4 +62,13 @@ export async function getConnectionDatabases(id: string) {
 // 获取连接上的活跃进程
 export async function getConnectionProcesses(id: string) {
   return get<ProcessInfo[]>(API_ENDPOINTS.connectionProcesses(id));
+}
+
+// ===================== 查询接口 =====================
+
+// 执行 SQL 查询
+export async function executeQuery(connectionId: string, sql: string, limit: number = 1000) {
+  return post<QueryResult>(`/connections/${connectionId}/query`, { sql, limit }, {
+    timeout: API_CONFIG.aiTimeout,
+  });
 }

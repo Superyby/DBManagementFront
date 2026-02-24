@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, PlusCircle, Activity, Settings, Database, ChevronLeft, ChevronRight, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Activity, Settings, Database, ChevronLeft, ChevronRight, Sun, Moon, Sparkles } from 'lucide-react';
 import { WelcomeNotification } from '../effects/Notification';
 import { CustomCursor } from '../effects/CustomCursor';
 import { useTheme } from '../../hooks/useTheme';
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/add', label: 'New Connection', icon: PlusCircle },
   { path: '/monitor', label: 'Monitor', icon: Activity },
+  { path: '/ai', label: 'AI Query', icon: Sparkles },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 

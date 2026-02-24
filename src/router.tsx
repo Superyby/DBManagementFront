@@ -4,6 +4,7 @@ import { DashboardBold } from './pages/DashboardBold';
 import { AddConnection } from './pages/AddConnection';
 import { Monitor } from './pages/Monitor';
 import { Settings } from './pages/Settings';
+import AiQuery from './pages/AiQuery';
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: 'settings',
         element: <Settings />,
+      },
+      {
+        path: 'ai',
+        element: <AiQuery />,
       },
     ],
   },
